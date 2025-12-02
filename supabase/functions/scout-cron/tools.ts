@@ -104,7 +104,7 @@ export async function executeScrapeTool(args: any, apiKey: string, maxAge?: numb
         "markdown",
         {
           type: "screenshot",
-          fullPage: true
+          fullPage: false
         }
       ],
       maxAge: maxAge || 3600000, // Default to 1 hour if not provided
