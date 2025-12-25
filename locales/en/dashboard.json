@@ -1,0 +1,121 @@
+{
+  "title": "Dashboard",
+  "welcome": "Welcome, {name}",
+  "empty": "Nothing here yet",
+  "tryAgain": "Try again",
+  "scouts": {
+    "title": "Your Scouts",
+    "subtitle": "Manage your AI scouts that continuously search and notify you",
+    "newScout": "New Scout",
+    "createNewScout": "New Scout",
+    "allScouts": "All Scouts",
+    "total": "{count} total",
+    "emptyTitle": "No scouts yet",
+    "emptySubtitle": "Create your first scout to start monitoring for updates",
+    "createScout": "Create Scout",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "lastRun": "Last run: {date}",
+    "unknown": "Unknown",
+    "delete": {
+      "title": "Delete Scout",
+      "description": "Are you sure you want to delete \"{title}\"? This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Delete"
+    },
+    "frequency": {
+      "daily": "daily",
+      "every_3_days": "every 3 days",
+      "weekly": "weekly"
+    }
+  },
+  "scout": {
+    "startPrompt": "Start by describing what you want to scout...",
+    "settingUp": "Setting up your scout...",
+    "inputPlaceholderDesktop": "Describe what you'd like to scout and our agent will handle the rest...",
+    "inputPlaceholderMobile": "Describe what you'd like to scout...",
+    "messageActions": {
+      "retry": "Retry",
+      "copy": "Copy"
+    },
+    "actions": {
+      "update": "Update Scout",
+      "activate": "Activate Scout"
+    },
+    "tooltip": {
+      "completeConfigurationFirst": "Complete scout configuration first"
+    },
+    "newScout": "New Scout",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "emptyState": {
+      "title": "Create a new scout to get started",
+      "goToScouts": "Go to Scouts"
+    },
+    "unknown": "Unknown"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Configure your account preferences",
+    "sections": {
+      "firecrawl": {
+        "label": "Firecrawl Integration",
+        "sponsoredTitle": "Sponsored Integration",
+        "sponsoredDescription": "Open Scouts provides a free Firecrawl API key for you to test the platform. This sponsored integration has limited credits. For unlimited usage, add your own API key below.",
+        "statusLabel": "Status:",
+        "creditsLabel": "Credits:",
+        "loading": "Loading...",
+        "remaining": "remaining",
+        "unableToFetch": "Unable to fetch",
+        "connectedSince": "Connected since {date}",
+        "creditsExhausted": "Sponsored credits exhausted. Add your own API key below for unlimited usage.",
+        "actions": {
+          "connecting": "Connecting...",
+          "waitSeconds": "Wait {seconds}s",
+          "connectNow": "Connect Now",
+          "reconnect": "Reconnect"
+        },
+        "customKey": {
+          "title": "Your Own API Key",
+          "active": "Active",
+          "description": "Add your own Firecrawl API key for unlimited usage. Your key will be used instead of the sponsored integration.",
+          "getKeyHere": "Get your key here",
+          "placeholder": "fc-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "saving": "Saving...",
+          "saveKey": "Save Key",
+          "remove": "Remove",
+          "removed": "API key removed",
+          "enterNewKey": "Please enter a new API key",
+          "invalidPrefix": "API key should start with 'fc-'"
+        },
+        "footer": "Powered by Firecrawl - Web scraping for AI applications"
+      },
+      "location": {
+        "label": "Location",
+        "title": "Your Location",
+        "description": "Set your default location for scouts. This will be used when creating new scouts to provide location-aware search results.",
+        "saved": "Location saved successfully!",
+        "saveFailed": "Failed to save location",
+        "footer": "Your location helps scouts find relevant local results"
+      },
+      "notifications": {
+        "label": "Notifications",
+        "emailTitle": "Email Notifications",
+        "emailDescription": "Scout notifications will be sent to your account email when your scouts find new results.",
+        "send": {
+          "sending": "Sending...",
+          "sendTest": "Send Test Email",
+          "waitSeconds": "Wait {seconds}s",
+          "success": "Test email sent! Check your inbox.",
+          "mustBeLoggedIn": "You must be logged in to send a test email. Please refresh the page and try again.",
+          "failed": "Failed to send test email"
+        },
+        "footer": "More notification options (SMS, Slack, Discord) coming soon..."
+      }
+    }
+  }
+}

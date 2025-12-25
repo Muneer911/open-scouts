@@ -14,6 +14,8 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import ReferrerCookie from "@/components/shared/referrer-cookie";
 import Header from "@/components/shared/header/Header";
 import { HeaderProvider } from "@/components/shared/header/HeaderContext";
+import { I18nProvider } from "@/contexts/I18nContext";
+import { getLocale, loadMessages } from "@/utils/i18n";
 import "./globals.css";
 
 const suisse = localFont({
@@ -47,6 +49,14 @@ const robotoMono = Roboto_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
   variable: "--font-roboto-mono",
+});
+
+import { Cairo } from "next/font/google";
+
+const cairo = Cairo({
+  subsets: ["arabic", "latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-arabic",
 });
 const meta = {
   title: "Open Scouts - AI-Powered Monitoring & Search",
@@ -104,28 +114,39 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
-export default function RootLayout({ children }: PropsWithChildren) {
+export default async function RootLayout({ children }: PropsWithChildren) {
+  const locale = await getLocale();
+  const dir = locale === "ar" ? "rtl" : "ltr";
+  const messages = await loadMessages(locale, [
+    "common",
+    "auth",
+    "errors",
+    "dashboard",
+  ]);
+
   return (
-    <html lang="en">
+    <html lang={locale} dir={dir}>
       <head>
         <ColorStyles />
       </head>
       <body
-        className={`${GeistMono.variable} ${robotoMono.variable} ${suisse.variable} font-sans text-accent-black bg-background-base overflow-x-clip`}
+        className={`${GeistMono.variable} ${robotoMono.variable} ${cairo.variable} ${suisse.variable} font-sans text-accent-black bg-background-base overflow-x-clip`}
       >
-        <AuthProvider>
-          <CurrencyProvider>
-            <HeaderProvider>
-              <Header />
-              <div className="fixed top-0 z-[2] cmw-container border-x border-border-faint h-screen pointer-events-none" />
-              <main className="overflow-x-clip">{children}</main>
-            </HeaderProvider>
-            <Scrollbar />
-            <Suspense>
-              <Toaster richColors toastOptions={{ duration: 3000 }} />
-            </Suspense>
-          </CurrencyProvider>
-        </AuthProvider>
+        <I18nProvider locale={locale} messages={messages}>
+          <AuthProvider>
+            <CurrencyProvider>
+              <HeaderProvider>
+                <Header />
+                <div className="fixed top-0 z-[2] cmw-container border-x border-border-faint h-screen pointer-events-none" />
+                <main className="overflow-x-clip">{children}</main>
+              </HeaderProvider>
+              <Scrollbar />
+              <Suspense>
+                <Toaster richColors toastOptions={{ duration: 3000 }} />
+              </Suspense>
+            </CurrencyProvider>
+          </AuthProvider>
+        </I18nProvider>
         <ReferrerCookie />
       </body>
     </html>

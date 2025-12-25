@@ -26,6 +26,7 @@ import {
 import { Connector } from "@/components/shared/layout/curvy-rect";
 import LocationSelector, { UserLocation } from "@/components/location-selector";
 import posthog from "posthog-js";
+import { useI18n } from "@/contexts/I18nContext";
 
 type FirecrawlKeyStatus =
   | "pending"
@@ -49,6 +50,7 @@ interface FirecrawlCredits {
 export default function SettingsPage() {
   const router = useRouter();
   const { user, isLoading: authLoading } = useAuth();
+  const { t } = useI18n();
   const [loading, setLoading] = useState(true);
 
   // Redirect to login if not authenticated
@@ -70,18 +72,27 @@ export default function SettingsPage() {
   );
   const [regeneratingKey, setRegeneratingKey] = useState(false);
   const [regenerateMessage, setRegenerateMessage] = useState("");
+  const [regenerateStatus, setRegenerateStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
   const [regenerateCooldown, setRegenerateCooldown] = useState(0); // seconds remaining
 
   // Location state
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
   const [savingLocation, setSavingLocation] = useState(false);
   const [locationMessage, setLocationMessage] = useState("");
+  const [locationStatus, setLocationStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
 
   // Custom API key state
   const [customApiKey, setCustomApiKey] = useState("");
   const [showApiKey, setShowApiKey] = useState(false);
   const [savingApiKey, setSavingApiKey] = useState(false);
   const [apiKeyMessage, setApiKeyMessage] = useState("");
+  const [apiKeyStatus, setApiKeyStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
 
   // Sponsored credits state
   const [sponsoredCredits, setSponsoredCredits] = useState<FirecrawlCredits | null>(null);
@@ -209,9 +220,7 @@ export default function SettingsPage() {
 
       if (!currentSession?.access_token) {
         setTestStatus("error");
-        setTestMessage(
-          "You must be logged in to send a test email. Please refresh the page and try again.",
-        );
+        setTestMessage(t("dashboard.settings.sections.notifications.send.mustBeLoggedIn"));
         setSendingTest(false);
         return;
       }
@@ -227,7 +236,9 @@ export default function SettingsPage() {
 
       if (!response.ok) {
         setTestStatus("error");
-        setTestMessage(data.error || "Failed to send test email");
+        setTestMessage(
+          data.error || t("dashboard.settings.sections.notifications.send.failed"),
+        );
 
         // Handle rate limiting (429)
         if (response.status === 429 && data.cooldownRemaining) {
@@ -235,7 +246,7 @@ export default function SettingsPage() {
         }
       } else {
         setTestStatus("success");
-        setTestMessage("Test email sent! Check your inbox.");
+        setTestMessage(t("dashboard.settings.sections.notifications.send.success"));
         // Set cooldown after successful send (2 minutes)
         setTestEmailCooldown(120);
 
@@ -252,7 +263,9 @@ export default function SettingsPage() {
     } catch (error) {
       setTestStatus("error");
       setTestMessage(
-        error instanceof Error ? error.message : "Failed to send test email",
+        error instanceof Error
+          ? error.message
+          : t("dashboard.settings.sections.notifications.send.failed"),
       );
     }
 
@@ -264,6 +277,7 @@ export default function SettingsPage() {
 
     setRegeneratingKey(true);
     setRegenerateMessage("");
+    setRegenerateStatus("idle");
 
     try {
       const response = await fetch("/api/firecrawl/regenerate", {
@@ -276,7 +290,8 @@ export default function SettingsPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        setRegenerateMessage(data.error || "Failed to regenerate key");
+        setRegenerateMessage(data.error || t("dashboard.tryAgain"));
+        setRegenerateStatus("error");
 
         // If rate limited (429), extract wait time and set cooldown
         if (response.status === 429) {
@@ -288,7 +303,8 @@ export default function SettingsPage() {
           }
         }
       } else {
-        setRegenerateMessage("Connected successfully!");
+        setRegenerateMessage(t("dashboard.settings.sections.firecrawl.actions.connectNow"));
+        setRegenerateStatus("success");
         // Set cooldown after successful regeneration
         setRegenerateCooldown(60);
         // Refresh the Firecrawl info
@@ -308,8 +324,9 @@ export default function SettingsPage() {
       }
     } catch (error) {
       setRegenerateMessage(
-        error instanceof Error ? error.message : "Failed to regenerate key",
+        error instanceof Error ? error.message : t("dashboard.tryAgain"),
       );
+      setRegenerateStatus("error");
     }
 
     setRegeneratingKey(false);
@@ -320,6 +337,7 @@ export default function SettingsPage() {
 
     setSavingLocation(true);
     setLocationMessage("");
+    setLocationStatus("idle");
 
     try {
       // Check if user_preferences row exists
@@ -347,7 +365,8 @@ export default function SettingsPage() {
       }
 
       setUserLocation(location);
-      setLocationMessage("Location saved successfully!");
+      setLocationMessage(t("dashboard.settings.sections.location.saved"));
+      setLocationStatus("success");
 
       // PostHog: Track location update
       posthog.capture("location_updated", {
@@ -359,8 +378,11 @@ export default function SettingsPage() {
       setTimeout(() => setLocationMessage(""), 3000);
     } catch (error) {
       setLocationMessage(
-        error instanceof Error ? error.message : "Failed to save location",
+        error instanceof Error
+          ? error.message
+          : t("dashboard.settings.sections.location.saveFailed"),
       );
+      setLocationStatus("error");
     }
 
     setSavingLocation(false);
@@ -371,18 +393,21 @@ export default function SettingsPage() {
 
     // Don't save if it's the masked placeholder
     if (customApiKey.includes("•")) {
-      setApiKeyMessage("Please enter a new API key");
+      setApiKeyMessage(t("dashboard.settings.sections.firecrawl.customKey.enterNewKey"));
+      setApiKeyStatus("error");
       return;
     }
 
     // Validate format
     if (customApiKey && !customApiKey.startsWith("fc-")) {
-      setApiKeyMessage("API key should start with 'fc-'");
+      setApiKeyMessage(t("dashboard.settings.sections.firecrawl.customKey.invalidPrefix"));
+      setApiKeyStatus("error");
       return;
     }
 
     setSavingApiKey(true);
     setApiKeyMessage("");
+    setApiKeyStatus("idle");
 
     try {
       // Check if user_preferences row exists
@@ -415,7 +440,8 @@ export default function SettingsPage() {
 
       if (customApiKey) {
         setHasCustomKey(true);
-        setApiKeyMessage("API key saved successfully!");
+        setApiKeyMessage(t("dashboard.settings.sections.firecrawl.customKey.saveKey"));
+        setApiKeyStatus("success");
         setFirecrawlInfo((prev) =>
           prev ? { ...prev, status: "active", error: null } : prev,
         );
@@ -429,7 +455,8 @@ export default function SettingsPage() {
         setCustomApiKey(masked);
       } else {
         setHasCustomKey(false);
-        setApiKeyMessage("API key removed");
+        setApiKeyMessage(t("dashboard.settings.sections.firecrawl.customKey.removed"));
+        setApiKeyStatus("success");
       }
 
       posthog.capture("firecrawl_custom_key_saved", {
@@ -439,8 +466,9 @@ export default function SettingsPage() {
       setTimeout(() => setApiKeyMessage(""), 3000);
     } catch (error) {
       setApiKeyMessage(
-        error instanceof Error ? error.message : "Failed to save API key",
+        error instanceof Error ? error.message : t("dashboard.tryAgain"),
       );
+      setApiKeyStatus("error");
     }
 
     setSavingApiKey(false);
@@ -514,36 +542,36 @@ export default function SettingsPage() {
 
       <div className="container relative">
         {/* Corner connectors */}
-        <Connector className="absolute -top-10 -left-[10.5px]" />
-        <Connector className="absolute -top-10 -right-[10.5px]" />
+        <Connector className="absolute -top-10 -start-[10.5px]" />
+        <Connector className="absolute -top-10 -end-[10.5px]" />
 
         {/* Header Section */}
         <div className="py-48 lg:py-64 relative">
           {/* Bottom border */}
-          <div className="h-1 bottom-0 absolute w-screen left-[calc(50%-50vw)] bg-border-faint" />
-          <Connector className="absolute -bottom-10 -left-[10.5px]" />
-          <Connector className="absolute -bottom-10 -right-[10.5px]" />
+          <div className="h-1 bottom-0 absolute w-screen start-[calc(50%-50vw)] bg-border-faint" />
+          <Connector className="absolute -bottom-10 -start-[10.5px]" />
+          <Connector className="absolute -bottom-10 -end-[10.5px]" />
 
           <div className="px-24">
             <h1 className="text-title-h3 lg:text-title-h2 font-semibold text-accent-black">
-              Settings
+              {t("dashboard.settings.title")}
             </h1>
             <p className="text-body-large text-black-alpha-56 mt-4">
-              Configure your account preferences
+              {t("dashboard.settings.subtitle")}
             </p>
           </div>
         </div>
 
         {/* Firecrawl Integration Section */}
         <div className="py-24 lg:py-32 relative">
-          <div className="h-1 bottom-0 absolute w-screen left-[calc(50%-50vw)] bg-border-faint" />
+          <div className="h-1 bottom-0 absolute w-screen start-[calc(50%-50vw)] bg-border-faint" />
 
           <div className="flex items-center gap-16">
             <div className="w-2 h-16 bg-heat-100" />
             <div className="flex gap-12 items-center text-mono-x-small text-black-alpha-32 font-mono">
               <Flame className="w-14 h-14" />
               <span className="uppercase tracking-wider">
-                Firecrawl Integration
+                {t("dashboard.settings.sections.firecrawl.label")}
               </span>
             </div>
           </div>
@@ -563,12 +591,12 @@ export default function SettingsPage() {
               <div className="p-24 space-y-16">
                 <div>
                   <h3 className="text-label-medium font-semibold text-accent-black mb-8">
-                    Sponsored Integration
+                    {t("dashboard.settings.sections.firecrawl.sponsoredTitle")}
                   </h3>
                   <p className="text-body-small text-black-alpha-48 mb-16">
-                    Open Scouts provides a free Firecrawl API key for you to
-                    test the platform. This sponsored integration has limited
-                    credits. For unlimited usage, add your own API key below.
+                    {t(
+                      "dashboard.settings.sections.firecrawl.sponsoredDescription",
+                    )}
                   </p>
 
                   {/* Status Badge */}
@@ -592,7 +620,7 @@ export default function SettingsPage() {
                           <>
                             <div className="flex items-center gap-12">
                               <span className="text-body-small text-black-alpha-56">
-                                Status:
+                                {t("dashboard.settings.sections.firecrawl.statusLabel")}
                               </span>
                               <div
                                 className={`inline-flex items-center gap-8 px-12 py-6 rounded-6 ${display.bgColor} ${display.color} border ${display.borderColor}`}
@@ -609,10 +637,14 @@ export default function SettingsPage() {
                               (firecrawlInfo.status === "active" ||
                                 isInsufficientCredits) && (
                                 <p className="text-body-small text-black-alpha-48">
-                                  Connected since{" "}
-                                  {new Date(
-                                    firecrawlInfo.createdAt,
-                                  ).toLocaleDateString()}
+                                  {t(
+                                    "dashboard.settings.sections.firecrawl.connectedSince",
+                                    {
+                                      date: new Date(
+                                        firecrawlInfo.createdAt,
+                                      ).toLocaleDateString(),
+                                    },
+                                  )}
                                 </p>
                               )}
 
@@ -621,11 +653,11 @@ export default function SettingsPage() {
                               isInsufficientCredits) && (
                               <div className="flex items-center gap-8">
                                 <span className="text-body-small text-black-alpha-56">
-                                  Credits:
+                                  {t("dashboard.settings.sections.firecrawl.creditsLabel")}
                                 </span>
                                 {loadingCredits ? (
                                   <span className="text-body-small text-black-alpha-48">
-                                    Loading...
+                                    {t("dashboard.settings.sections.firecrawl.loading")}
                                   </span>
                                 ) : sponsoredCredits?.remainingCredits !==
                                     null &&
@@ -644,11 +676,11 @@ export default function SettingsPage() {
                                     {sponsoredCredits.planCredits
                                       ? ` / ${sponsoredCredits.planCredits.toLocaleString()}`
                                       : ""}{" "}
-                                    remaining
+                                    {t("dashboard.settings.sections.firecrawl.remaining")}
                                   </span>
                                 ) : (
                                   <span className="text-body-small text-black-alpha-48">
-                                    Unable to fetch
+                                    {t("dashboard.settings.sections.firecrawl.unableToFetch")}
                                   </span>
                                 )}
                               </div>
@@ -659,8 +691,9 @@ export default function SettingsPage() {
                               <div className="flex items-start gap-8 p-12 rounded-8 bg-heat-100/10 border border-heat-100/20">
                                 <AlertTriangle className="w-16 h-16 text-heat-100 mt-2 shrink-0" />
                                 <span className="text-body-small text-heat-100">
-                                  Sponsored credits exhausted. Add your own API
-                                  key below for unlimited usage.
+                                  {t(
+                                    "dashboard.settings.sections.firecrawl.creditsExhausted",
+                                  )}
                                 </span>
                               </div>
                             )}
@@ -695,19 +728,28 @@ export default function SettingsPage() {
                                     {regeneratingKey ? (
                                       <>
                                         <div className="animate-spin rounded-full h-16 w-16 border-2 border-black-alpha-32 border-t-transparent" />
-                                        Connecting...
+                                        {t(
+                                          "dashboard.settings.sections.firecrawl.actions.connecting",
+                                        )}
                                       </>
                                     ) : regenerateCooldown > 0 ? (
                                       <>
                                         <Clock className="w-16 h-16" />
-                                        Wait {regenerateCooldown}s
+                                        {t(
+                                          "dashboard.settings.sections.firecrawl.actions.waitSeconds",
+                                          { seconds: regenerateCooldown },
+                                        )}
                                       </>
                                     ) : (
                                       <>
                                         <RefreshCw className="w-16 h-16" />
                                         {firecrawlInfo.status === "pending"
-                                          ? "Connect Now"
-                                          : "Reconnect"}
+                                          ? t(
+                                              "dashboard.settings.sections.firecrawl.actions.connectNow",
+                                            )
+                                          : t(
+                                              "dashboard.settings.sections.firecrawl.actions.reconnect",
+                                            )}
                                       </>
                                     )}
                                   </Button>
@@ -715,16 +757,12 @@ export default function SettingsPage() {
                                   {regenerateMessage && (
                                     <div
                                       className={`flex items-start gap-8 mt-12 p-12 rounded-8 ${
-                                        regenerateMessage.includes(
-                                          "successfully",
-                                        )
+                                        regenerateStatus === "success"
                                           ? "bg-accent-forest/10 text-accent-forest border border-accent-forest/20"
                                           : "bg-accent-crimson/10 text-accent-crimson border border-accent-crimson/20"
                                       }`}
                                     >
-                                      {regenerateMessage.includes(
-                                        "successfully",
-                                      ) ? (
+                                      {regenerateStatus === "success" ? (
                                         <Check className="w-16 h-16 mt-2 shrink-0" />
                                       ) : (
                                         <AlertCircle className="w-16 h-16 mt-2 shrink-0" />
@@ -748,24 +786,23 @@ export default function SettingsPage() {
                   <div className="flex items-center gap-8 mb-8">
                     <Key className="w-16 h-16 text-black-alpha-48" />
                     <h3 className="text-label-medium font-semibold text-accent-black">
-                      Your Own API Key
+                      {t("dashboard.settings.sections.firecrawl.customKey.title")}
                     </h3>
                     {hasCustomKey && (
                       <span className="text-mono-x-small text-accent-forest bg-accent-forest/10 px-8 py-2 rounded-4">
-                        Active
+                        {t("dashboard.settings.sections.firecrawl.customKey.active")}
                       </span>
                     )}
                   </div>
                   <p className="text-body-small text-black-alpha-48 mb-16">
-                    Add your own Firecrawl API key for unlimited usage. Your key
-                    will be used instead of the sponsored integration.{" "}
+                    {t("dashboard.settings.sections.firecrawl.customKey.description")}{" "}
                     <a
                       href="https://www.firecrawl.dev/app/api-keys"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-heat-100 hover:underline inline-flex items-center gap-4"
                     >
-                      Get your key here
+                      {t("dashboard.settings.sections.firecrawl.customKey.getKeyHere")}
                       <ExternalLink className="w-12 h-12" />
                     </a>
                   </p>
@@ -785,13 +822,15 @@ export default function SettingsPage() {
                             setCustomApiKey("");
                           }
                         }}
-                        placeholder="fc-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                        className="w-full h-44 px-16 pr-44 rounded-8 border border-border-muted bg-background-base text-body-medium font-mono focus:outline-none focus:border-heat-100 focus:ring-1 focus:ring-heat-100"
+                        placeholder={t(
+                          "dashboard.settings.sections.firecrawl.customKey.placeholder",
+                        )}
+                        className="w-full h-44 px-16 pe-44 rounded-8 border border-border-muted bg-background-base text-body-medium font-mono focus:outline-none focus:border-heat-100 focus:ring-1 focus:ring-heat-100"
                       />
                       <button
                         type="button"
                         onClick={() => setShowApiKey(!showApiKey)}
-                        className="absolute right-12 top-1/2 -translate-y-1/2 text-black-alpha-48 hover:text-black-alpha-72"
+                        className="absolute end-12 top-1/2 -translate-y-1/2 text-black-alpha-48 hover:text-black-alpha-72"
                       >
                         {showApiKey ? (
                           <EyeOff className="w-18 h-18" />
@@ -811,12 +850,12 @@ export default function SettingsPage() {
                         {savingApiKey ? (
                           <>
                             <div className="animate-spin rounded-full h-16 w-16 border-2 border-black-alpha-32 border-t-transparent" />
-                            Saving...
+                            {t("dashboard.settings.sections.firecrawl.customKey.saving")}
                           </>
                         ) : (
                           <>
                             <Check className="w-16 h-16" />
-                            Save Key
+                            {t("dashboard.settings.sections.firecrawl.customKey.saveKey")}
                           </>
                         )}
                       </Button>
@@ -832,7 +871,12 @@ export default function SettingsPage() {
                               .eq("user_id", user?.id)
                               .then(() => {
                                 setHasCustomKey(false);
-                                setApiKeyMessage("API key removed");
+                                setApiKeyMessage(
+                                  t(
+                                    "dashboard.settings.sections.firecrawl.customKey.removed",
+                                  ),
+                                );
+                                setApiKeyStatus("success");
                                 setSavingApiKey(false);
                                 setTimeout(() => setApiKeyMessage(""), 3000);
                               });
@@ -840,7 +884,7 @@ export default function SettingsPage() {
                           disabled={savingApiKey}
                           className="px-16 py-8 rounded-6 text-label-medium text-accent-crimson hover:bg-accent-crimson/10 transition-colors disabled:opacity-50"
                         >
-                          Remove
+                          {t("dashboard.settings.sections.firecrawl.customKey.remove")}
                         </button>
                       )}
                     </div>
@@ -848,14 +892,12 @@ export default function SettingsPage() {
                     {apiKeyMessage && (
                       <div
                         className={`flex items-start gap-8 p-12 rounded-8 ${
-                          apiKeyMessage.includes("successfully") ||
-                          apiKeyMessage.includes("removed")
+                          apiKeyStatus === "success"
                             ? "bg-accent-forest/10 text-accent-forest border border-accent-forest/20"
                             : "bg-accent-crimson/10 text-accent-crimson border border-accent-crimson/20"
                         }`}
                       >
-                        {apiKeyMessage.includes("successfully") ||
-                        apiKeyMessage.includes("removed") ? (
+                        {apiKeyStatus === "success" ? (
                           <Check className="w-16 h-16 mt-2 shrink-0" />
                         ) : (
                           <AlertCircle className="w-16 h-16 mt-2 shrink-0" />
@@ -870,7 +912,7 @@ export default function SettingsPage() {
               {/* Info Footer */}
               <div className="px-24 py-16 border-t border-border-faint bg-background-base">
                 <p className="text-mono-x-small font-mono text-black-alpha-32">
-                  Powered by Firecrawl - Web scraping for AI applications
+                  {t("dashboard.settings.sections.firecrawl.footer")}
                 </p>
               </div>
             </div>
@@ -879,13 +921,15 @@ export default function SettingsPage() {
 
         {/* Location Section Label */}
         <div className="py-24 lg:py-32 relative">
-          <div className="h-1 bottom-0 absolute w-screen left-[calc(50%-50vw)] bg-border-faint" />
+          <div className="h-1 bottom-0 absolute w-screen start-[calc(50%-50vw)] bg-border-faint" />
 
           <div className="flex items-center gap-16">
             <div className="w-2 h-16 bg-heat-100" />
             <div className="flex gap-12 items-center text-mono-x-small text-black-alpha-32 font-mono">
               <MapPin className="w-14 h-14" />
-              <span className="uppercase tracking-wider">Location</span>
+              <span className="uppercase tracking-wider">
+                {t("dashboard.settings.sections.location.label")}
+              </span>
             </div>
           </div>
         </div>
@@ -904,12 +948,10 @@ export default function SettingsPage() {
               <div className="p-24 space-y-16">
                 <div>
                   <h3 className="text-label-medium font-semibold text-accent-black mb-8">
-                    Your Location
+                    {t("dashboard.settings.sections.location.title")}
                   </h3>
                   <p className="text-body-small text-black-alpha-48 mb-16">
-                    Set your default location for scouts. This will be used when
-                    creating new scouts to provide location-aware search
-                    results.
+                    {t("dashboard.settings.sections.location.description")}
                   </p>
 
                   <LocationSelector
@@ -921,12 +963,12 @@ export default function SettingsPage() {
                   {locationMessage && (
                     <div
                       className={`flex items-start gap-8 mt-12 p-12 rounded-8 ${
-                        locationMessage.includes("successfully")
+                        locationStatus === "success"
                           ? "bg-accent-forest/10 text-accent-forest border border-accent-forest/20"
                           : "bg-accent-crimson/10 text-accent-crimson border border-accent-crimson/20"
                       }`}
                     >
-                      {locationMessage.includes("successfully") ? (
+                      {locationStatus === "success" ? (
                         <Check className="w-16 h-16 mt-2 shrink-0" />
                       ) : (
                         <AlertCircle className="w-16 h-16 mt-2 shrink-0" />
@@ -940,7 +982,7 @@ export default function SettingsPage() {
               {/* Info Footer */}
               <div className="px-24 py-16 border-t border-border-faint bg-background-base">
                 <p className="text-mono-x-small font-mono text-black-alpha-32">
-                  Your location helps scouts find relevant local results
+                  {t("dashboard.settings.sections.location.footer")}
                 </p>
               </div>
             </div>
@@ -949,13 +991,15 @@ export default function SettingsPage() {
 
         {/* Notifications Section Label */}
         <div className="py-24 lg:py-32 relative">
-          <div className="h-1 bottom-0 absolute w-screen left-[calc(50%-50vw)] bg-border-faint" />
+          <div className="h-1 bottom-0 absolute w-screen start-[calc(50%-50vw)] bg-border-faint" />
 
           <div className="flex items-center gap-16">
             <div className="w-2 h-16 bg-heat-100" />
             <div className="flex gap-12 items-center text-mono-x-small text-black-alpha-32 font-mono">
               <Bell className="w-14 h-14" />
-              <span className="uppercase tracking-wider">Notifications</span>
+              <span className="uppercase tracking-wider">
+                {t("dashboard.settings.sections.notifications.label")}
+              </span>
             </div>
           </div>
         </div>
@@ -979,7 +1023,7 @@ export default function SettingsPage() {
                 {/* Email Notification Section */}
                 <div>
                   <h3 className="text-label-medium font-semibold text-accent-black mb-8">
-                    Email Notifications
+                    {t("dashboard.settings.sections.notifications.emailTitle")}
                   </h3>
                   <div className="flex items-center gap-8 mb-8">
                     <Mail className="w-16 h-16 text-black-alpha-48" />
@@ -988,8 +1032,7 @@ export default function SettingsPage() {
                     </span>
                   </div>
                   <p className="text-body-small text-black-alpha-48">
-                    Scout notifications will be sent to your account email when
-                    your scouts find new results.
+                    {t("dashboard.settings.sections.notifications.emailDescription")}
                   </p>
 
                   {/* Test Email Button */}
@@ -1003,17 +1046,20 @@ export default function SettingsPage() {
                       {sendingTest ? (
                         <>
                           <div className="animate-spin rounded-full h-16 w-16 border-2 border-black-alpha-32 border-t-transparent" />
-                          Sending...
+                          {t("dashboard.settings.sections.notifications.send.sending")}
                         </>
                       ) : testEmailCooldown > 0 ? (
                         <>
                           <Clock className="w-16 h-16" />
-                          Wait {testEmailCooldown}s
+                          {t(
+                            "dashboard.settings.sections.notifications.send.waitSeconds",
+                            { seconds: testEmailCooldown },
+                          )}
                         </>
                       ) : (
                         <>
                           <Mail className="w-16 h-16" />
-                          Send Test Email
+                          {t("dashboard.settings.sections.notifications.send.sendTest")}
                         </>
                       )}
                     </Button>
@@ -1043,7 +1089,7 @@ export default function SettingsPage() {
               {/* Future Settings Placeholder */}
               <div className="px-24 py-16 border-t border-border-faint bg-background-base">
                 <p className="text-mono-x-small font-mono text-black-alpha-32">
-                  More notification options (SMS, Slack, Discord) coming soon...
+                  {t("dashboard.settings.sections.notifications.footer")}
                 </p>
               </div>
             </div>

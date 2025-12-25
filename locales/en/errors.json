@@ -1,0 +1,37 @@
+{
+  "network": {
+    "offline": "You appear to be offline",
+    "timeout": "Request timed out",
+    "serverError": "Server error, please try again later"
+  },
+  "auth": {
+    "invalidCredentials": "Invalid credentials",
+    "sessionExpired": "Session expired",
+    "unauthorized": "Unauthorized"
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalidFormat": "Invalid format",
+    "tooLong": "Value is too long",
+    "tooShort": "Value is too short"
+  },
+  "pages": {
+    "errorBoundary": {
+      "title": "Something went wrong...",
+      "goHome": "Go Home",
+      "tryAgain": "Try Again",
+      "unexpected": "An unexpected error occurred",
+      "copy": {
+        "copied": "Copied!",
+        "copyError": "Copy Error",
+        "errorPrefix": "Error:",
+        "idPrefix": "ID:",
+        "stackPrefix": "Stack:"
+      }
+    },
+    "notFound": {
+      "title": "404 - Not Found",
+      "goBackHome": "Go Back Home"
+    }
+  }
+}

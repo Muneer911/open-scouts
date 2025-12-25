@@ -6,10 +6,12 @@ import { useAuth } from "@/contexts/AuthContext";
 import { LogOut, ChevronDown, Settings } from "lucide-react";
 import Link from "next/link";
 import Button from "../../button/Button";
+import { useI18n } from "@/contexts/I18nContext";
 
 export default function UserMenu() {
   const { user, isLoading, signOut } = useAuth();
   const router = useRouter();
+  const { t } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -44,14 +46,14 @@ export default function UserMenu() {
     return (
       <Link href="/login">
         <Button variant="secondary" size="default">
-          Sign In
+          {t("common.header.userMenu.signIn")}
         </Button>
       </Link>
     );
   }
 
   // Get user initials or first letter of email
-  const displayName = user.email?.split("@")[0] || "User";
+  const displayName = user.email?.split("@")[0] || t("common.header.userMenu.fallbackUser");
   const initials = displayName.slice(0, 2).toUpperCase();
 
   return (
@@ -74,7 +76,7 @@ export default function UserMenu() {
       {/* Dropdown Menu */}
       {isOpen && (
         <div
-          className="absolute right-0 top-full mt-8 w-200 bg-accent-white rounded-12 shadow-lg border border-border-muted overflow-hidden z-50"
+          className="absolute end-0 top-full mt-8 w-200 bg-accent-white rounded-12 shadow-lg border border-border-muted overflow-hidden z-50"
           style={{
             boxShadow:
               "0px 4px 16px rgba(0, 0, 0, 0.08), 0px 0px 0px 1px rgba(0, 0, 0, 0.04)",
@@ -95,20 +97,20 @@ export default function UserMenu() {
             <Link
               href="/settings"
               onClick={() => setIsOpen(false)}
-              className="w-full flex items-center gap-12 px-16 py-10 hover:bg-black-alpha-4 transition-colors text-left"
+              className="w-full flex items-center gap-12 px-16 py-10 hover:bg-black-alpha-4 transition-colors text-start"
             >
               <Settings className="w-16 h-16 text-black-alpha-56" />
               <span className="text-body-medium text-accent-black">
-                Settings
+                {t("common.header.userMenu.settings")}
               </span>
             </Link>
             <button
               onClick={handleSignOut}
-              className="w-full flex items-center gap-12 px-16 py-10 hover:bg-black-alpha-4 transition-colors text-left"
+              className="w-full flex items-center gap-12 px-16 py-10 hover:bg-black-alpha-4 transition-colors text-start"
             >
               <LogOut className="w-16 h-16 text-black-alpha-56" />
               <span className="text-body-medium text-accent-black">
-                Sign Out
+                {t("common.header.userMenu.signOut")}
               </span>
             </button>
           </div>

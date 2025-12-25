@@ -27,7 +27,7 @@ export default function HeaderDropdownWrapper() {
       {dropdownContent && (
         <motion.div
           animate={{ opacity: 1 }}
-          className="h-screen w-screen fixed left-0 z-[2000] bg-black-alpha-40"
+          className="h-screen w-screen fixed start-0 z-[2000] bg-black-alpha-40"
           exit={{
             opacity: 0,
             transition: {
@@ -81,8 +81,8 @@ export default function HeaderDropdownWrapper() {
                 }}
               >
                 <div className="cmw-[1112px] absolute h-full pointer-events-none top-0 border-x border-border-faint">
-                  <Connector className="absolute -left-[11.5px] -top-11" />
-                  <Connector className="absolute -right-[11.5px] -top-11" />
+                  <Connector className="absolute -start-[11.5px] -top-11" />
+                  <Connector className="absolute -end-[11.5px] -top-11" />
                 </div>
 
                 <motion.div

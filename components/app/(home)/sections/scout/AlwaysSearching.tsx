@@ -3,6 +3,7 @@
 import CurvyRect from "@/components/shared/layout/curvy-rect";
 import SectionHead from "@/components/shared/section-head/SectionHead";
 import { Connector } from "@/components/shared/layout/curvy-rect";
+import { useI18n } from "@/contexts/I18nContext";
 
 import ScoutAgent from "./ScoutAgent/ScoutAgent";
 import AiFlame from "../ai/Flame/Flame";
@@ -76,7 +77,7 @@ function ScoutCard({
     <div className="relative lg:flex lg:h-400" id={id}>
       <div className="p-32 lg:px-64 lg:py-60 z-[2] lg:w-454 relative flex flex-col h-full">
         <CurvyRect
-          className="absolute -top-1 h-[calc(100%+1px)] left-0 w-full"
+          className="absolute -top-1 h-[calc(100%+1px)] start-0 w-full"
           allSides
         />
 
@@ -92,9 +93,9 @@ function ScoutCard({
         <div className="flex-1 mb-24" />
       </div>
 
-      <div className="flex-1 -mt-1 lg:-ml-1 relative">
-        <div className="absolute lg-max:w-full lg-max:h-1 left-0 h-full w-1 bg-border-faint top-0" />
-        <CurvyRect className="absolute top-0 h-full left-0 w-full" allSides />
+      <div className="flex-1 -mt-1 lg:-ms-1 relative">
+        <div className="absolute lg-max:w-full lg-max:h-1 start-0 h-full w-1 bg-border-faint top-0" />
+        <CurvyRect className="absolute top-0 h-full start-0 w-full" allSides />
 
         {children}
       </div>
@@ -103,20 +104,22 @@ function ScoutCard({
 }
 
 export default function AlwaysSearching() {
+  const { t } = useI18n();
+
   return (
     <>
       {/* Section Title */}
       <div className="-mt-1 pointer-events-none select-none relative container">
-        <Connector className="absolute right-[-10.5px] -top-10" />
-        <Connector className="absolute left-[-10.5px] -top-10" />
-        <Connector className="absolute right-[-10.5px] -bottom-10" />
-        <Connector className="absolute left-[-10.5px] -bottom-10" />
+        <Connector className="absolute end-[-10.5px] -top-10" />
+        <Connector className="absolute start-[-10.5px] -top-10" />
+        <Connector className="absolute end-[-10.5px] -bottom-10" />
+        <Connector className="absolute start-[-10.5px] -bottom-10" />
 
         <div className="relative grid lg:grid-cols-2 -mt-1">
-          <div className="h-1 bottom-0 absolute w-screen left-[calc(50%-50vw)] bg-border-faint" />
+          <div className="h-1 bottom-0 absolute w-screen start-[calc(50%-50vw)] bg-border-faint" />
 
           <div className="flex gap-40 py-24 lg:py-45 relative">
-            <div className="h-full w-1 right-0 top-0 bg-border-faint absolute lg-max:hidden" />
+            <div className="h-full w-1 end-0 top-0 bg-border-faint absolute lg-max:hidden" />
             <div className="w-2 h-16 bg-heat-100" />
 
             <div className="flex gap-12 items-center !text-mono-x-small text-black-alpha-16 font-mono">
@@ -127,7 +130,7 @@ export default function AlwaysSearching() {
               <div className="w-8 text-center">·</div>
 
               <div className="uppercase text-black-alpha-32">
-                Always Searching
+                {t("common.homeSections.alwaysSearching.kicker")}
               </div>
             </div>
           </div>
@@ -139,16 +142,18 @@ export default function AlwaysSearching() {
           badgeContent={
             <>
               <BadgeIcon />
-              <span>Continuous scouting</span>
+              <span>{t("common.homeSections.alwaysSearching.badge")}</span>
             </>
           }
           className="lg-max:!py-64"
-          description="Your scouts work 24/7 in the background, searching the web and notifying you the moment they find a match."
+          description={t("common.homeSections.alwaysSearching.description")}
           descriptionClassName="lg-max:px-24"
           title={
             <>
-              Never miss <br className="lg:hidden" />
-              <span className="text-heat-100">an opportunity</span>
+              {t("common.homeSections.alwaysSearching.titlePrefix")} <br className="lg:hidden" />
+              <span className="text-heat-100">
+                {t("common.homeSections.alwaysSearching.titleAccent")}
+              </span>
             </>
           }
           titleClassName="max-w-650"
@@ -157,13 +162,13 @@ export default function AlwaysSearching() {
         </SectionHead>
 
         <ScoutCard
-          title="Continuous scouting"
-          subtitle="Always searching"
+          title={t("common.homeSections.alwaysSearching.card.title")}
+          subtitle={t("common.homeSections.alwaysSearching.card.subtitle")}
           description={
             <>
-              Your scout runs automatically in the background,
+              {t("common.homeSections.alwaysSearching.card.line1")}
               <br />
-              searching and notifying you of new matches.
+              {t("common.homeSections.alwaysSearching.card.line2")}
             </>
           }
           icon={<ScoutIcon />}
@@ -175,12 +180,12 @@ export default function AlwaysSearching() {
 
       {/* Bottom spacing with connectors */}
       <div className="h-92 lg:h-160 -mt-1 relative container">
-        <div className="h-1 top-0 absolute w-screen left-[calc(50%-50vw)] bg-border-faint" />
-        <div className="h-1 bottom-0 absolute w-screen left-[calc(50%-50vw)] bg-border-faint" />
-        <Connector className="absolute -top-[10px] -left-[10.5px]" />
-        <Connector className="absolute -top-[10px] -right-[10.5px]" />
-        <Connector className="absolute -bottom-[10px] -left-[10.5px]" />
-        <Connector className="absolute -bottom-[10px] -right-[10.5px]" />
+        <div className="h-1 top-0 absolute w-screen start-[calc(50%-50vw)] bg-border-faint" />
+        <div className="h-1 bottom-0 absolute w-screen start-[calc(50%-50vw)] bg-border-faint" />
+        <Connector className="absolute -top-[10px] -start-[10.5px]" />
+        <Connector className="absolute -top-[10px] -end-[10.5px]" />
+        <Connector className="absolute -bottom-[10px] -start-[10.5px]" />
+        <Connector className="absolute -bottom-[10px] -end-[10.5px]" />
       </div>
     </>
   );

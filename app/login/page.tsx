@@ -6,12 +6,16 @@ import { createClient } from "@/lib/supabase/client";
 import Button from "@/components/shared/button/Button";
 import { Mail, Lock, Loader2 } from "lucide-react";
 import posthog from "posthog-js";
+import { useI18n } from "@/contexts/I18nContext";
+import { getAuthErrorKey } from "@/utils/auth-errors";
 
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") || "/";
   const pendingQuery = searchParams.get("pendingQuery") || "";
+
+  const { t } = useI18n();
 
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
@@ -92,10 +96,11 @@ function LoginContent() {
           });
         }
 
-        setMessage("Check your email for the confirmation link!");
+        setMessage(t("auth.messages.confirmEmail"));
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      const errorKey = getAuthErrorKey(err instanceof Error ? err : String(err));
+      setError(t(errorKey));
     } finally {
       setIsLoading(false);
     }
@@ -117,7 +122,8 @@ function LoginContent() {
       });
       if (error) throw error;
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      const errorKey = getAuthErrorKey(err instanceof Error ? err : String(err));
+      setError(t(errorKey));
       setIsLoading(false);
     }
   };
@@ -134,12 +140,12 @@ function LoginContent() {
         {/* Header */}
         <div className="text-center mb-32">
           <h1 className="text-title-h4 text-accent-black mb-8">
-            {isLogin ? "Welcome back" : "Create an account"}
+            {isLogin ? t("auth.login.welcomeBack") : t("auth.register.title")}
           </h1>
           <p className="text-body-medium text-black-alpha-56">
             {isLogin
-              ? "Sign in to continue creating scouts"
-              : "Sign up to start creating AI scouts"}
+              ? t("auth.login.subtitle")
+              : t("auth.register.subtitle")}
           </p>
         </div>
 
@@ -167,49 +173,53 @@ function LoginContent() {
               d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
             />
           </svg>
-          Continue with Google
+          {t("auth.login.continueWithGoogle")}
         </button>
 
         {/* Divider */}
         <div className="flex items-center gap-16 my-24">
           <div className="flex-1 h-1 bg-border-faint" />
-          <span className="text-label-small text-black-alpha-48">or</span>
+          <span className="text-label-small text-black-alpha-48">
+            {t("auth.login.dividerOr")}
+          </span>
           <div className="flex-1 h-1 bg-border-faint" />
         </div>
 
         {/* Email/Password Form */}
         <form onSubmit={handleEmailAuth} className="space-y-16">
           <div>
-            <label className="block text-label-small text-black-alpha-56 mb-8">
-              Email
+            <label className="block text-start text-label-small text-black-alpha-56 mb-8">
+              {t("auth.login.email")}
             </label>
             <div className="relative">
-              <Mail className="absolute left-12 top-1/2 -translate-y-1/2 w-18 h-18 text-black-alpha-48" />
+              <Mail className="absolute start-12 top-1/2 -translate-y-1/2 w-18 h-18 text-black-alpha-48" />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
+                placeholder={t("auth.login.emailPlaceholder")}
                 required
-                className="w-full pl-40 pr-12 py-12 rounded-8 border border-border-muted bg-accent-white text-body-input text-accent-black placeholder:text-black-alpha-48 focus:outline-none focus:ring-2 focus:ring-heat-100/20 focus:border-heat-100"
+                dir="auto"
+                className="w-full ps-40 pe-12 py-12 rounded-8 border border-border-muted bg-accent-white text-body-input text-accent-black placeholder:text-black-alpha-48 focus:outline-none focus:ring-2 focus:ring-heat-100/20 focus:border-heat-100"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-label-small text-black-alpha-56 mb-8">
-              Password
+            <label className="block text-start text-label-small text-black-alpha-56 mb-8">
+              {t("auth.login.password")}
             </label>
             <div className="relative">
-              <Lock className="absolute left-12 top-1/2 -translate-y-1/2 w-18 h-18 text-black-alpha-48" />
+              <Lock className="absolute start-12 top-1/2 -translate-y-1/2 w-18 h-18 text-black-alpha-48" />
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder={t("auth.login.passwordPlaceholder")}
                 required
                 minLength={6}
-                className="w-full pl-40 pr-12 py-12 rounded-8 border border-border-muted bg-accent-white text-body-input text-accent-black placeholder:text-black-alpha-48 focus:outline-none focus:ring-2 focus:ring-heat-100/20 focus:border-heat-100"
+                dir="auto"
+                className="w-full ps-40 pe-12 py-12 rounded-8 border border-border-muted bg-accent-white text-body-input text-accent-black placeholder:text-black-alpha-48 focus:outline-none focus:ring-2 focus:ring-heat-100/20 focus:border-heat-100"
               />
             </div>
           </div>
@@ -236,11 +246,11 @@ function LoginContent() {
             {isLoading ? (
               <div className="flex items-center justify-center gap-8 px-16 py-8">
                 <Loader2 className="w-18 h-18 animate-spin" />
-                Loading...
+                {t("auth.login.loading")}
               </div>
             ) : (
               <div className="px-16 py-8">
-                {isLogin ? "Sign In" : "Sign Up"}
+                {isLogin ? t("auth.login.title") : t("auth.toggle.signUp")}
               </div>
             )}
           </Button>
@@ -249,7 +259,7 @@ function LoginContent() {
         {/* Toggle Login/Signup */}
         <div className="mt-24 text-center">
           <p className="text-body-small text-black-alpha-56">
-            {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+            {isLogin ? t("auth.login.noAccount") : t("auth.toggle.alreadyHaveAccount")}{" "}
             <button
               type="button"
               onClick={() => {
@@ -259,7 +269,7 @@ function LoginContent() {
               }}
               className="text-heat-100 hover:underline font-medium"
             >
-              {isLogin ? "Sign up" : "Sign in"}
+              {isLogin ? t("auth.toggle.signUp") : t("auth.toggle.signIn")}
             </button>
           </p>
         </div>

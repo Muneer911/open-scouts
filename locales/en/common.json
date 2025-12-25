@@ -1,0 +1,174 @@
+{
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "settings": "Settings"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "edit": "Edit",
+    "create": "Create"
+  },
+  "status": {
+    "loading": "Loading...",
+    "success": "Success",
+    "error": "Something went wrong",
+    "empty": "No data"
+  },
+  "location": {
+    "selectCountry": "Select Country",
+    "selectStateIn": "Select State in {country}",
+    "selectCityIn": "Select City in {place}",
+    "selectPlaceholder": "Select your location...",
+    "detectMyLocation": "Detect my location",
+    "searchPlaceholder": "Search {step}...",
+    "skipStateSelection": "Skip state selection",
+    "skipCitySelection": "Skip city selection",
+    "back": "Back",
+    "noResults": "No results found",
+    "geoNotSupported": "Geolocation is not supported by your browser"
+  },
+  "home": {
+    "hero": {
+      "headlinePrefix": "Open",
+      "headlineAccent": "Scouts",
+      "subtitle": "Create AI scouts that continuously search and notify you when they find what you're looking for"
+    },
+    "placeholders": [
+      "Scout for Taylor Swift tickets in my city...",
+      "Tell me when Mr. Beast comes to my city...",
+      "Scout for new Chinese restaurants near me...",
+      "Scout for Tesla Cybertruck available for test drive...",
+      "Scout for cheap flights to Tokyo next month...",
+      "Scout for PS5 restocks at local stores..."
+    ],
+    "actions": {
+      "createScout": "Create Scout"
+    },
+    "alerts": {
+      "checkLimitError": "Error checking scout limit. Please try again.",
+      "limitReached": "You have reached the maximum limit of 5 scouts. Please delete an existing scout to create a new one.",
+      "createScoutError": "Error creating scout: {message}"
+    },
+    "unknown": "Unknown"
+  },
+  "homeSections": {
+    "recentDiscoveries": {
+      "kicker": "Recent Discoveries",
+      "badge": "Live discoveries",
+      "descriptionPreview": "This is what discoveries will look like once your scouts find something.",
+      "descriptionLive": "Real-time findings from scouts around the world.",
+      "titlePreviewPrefix": "What your scouts",
+      "titlePreviewAccent": "will find",
+      "titleLivePrefix": "Latest",
+      "titleLiveAccent": "discoveries",
+      "previewTag": "PREVIEW",
+      "cta": "Create your first scout to start receiving discoveries"
+    },
+    "howItWorks": {
+      "kicker": "How It Works",
+      "badge": "How it works",
+      "description": "Create powerful AI scouts that work around the clock to find exactly what you're looking for.",
+      "titlePrefix": "From idea to",
+      "titleAccent": "discovery",
+      "titleSuffix": "in minutes",
+      "card": {
+        "title": "AI-powered configuration",
+        "subtitle": "Chat to configure",
+        "line1": "Tell our AI assistant what you want to scout.",
+        "line2": "It will help you set up the perfect search criteria."
+      }
+    },
+    "alwaysSearching": {
+      "kicker": "Always Searching",
+      "badge": "Continuous scouting",
+      "description": "Your scouts work 24/7 in the background, searching the web and notifying you the moment they find a match.",
+      "titlePrefix": "Never miss",
+      "titleAccent": "an opportunity",
+      "card": {
+        "title": "Continuous scouting",
+        "subtitle": "Always searching",
+        "line1": "Your scout runs automatically in the background,",
+        "line2": "searching and notifying you of new matches."
+      }
+    },
+    "time": {
+      "secondsAgo": "{count}s ago",
+      "minutesAgo": "{count}m ago",
+      "hoursAgo": "{count}h ago",
+      "daysAgo": "{count}d ago",
+      "weeksAgo": "{count}w ago",
+      "monthsAgo": "{count}mo ago",
+      "yearsAgo": "{count}y ago"
+    },
+    "scoutChats": {
+      "assistantName": "Scout Assistant",
+      "poweredBy": "powered by",
+      "status": {
+        "configuring": "Configuring",
+        "step": "Step {current} of {total}"
+      },
+      "userBubble": "Scout for Taylor Swift tickets",
+      "thinking": "is thinking...",
+      "input": {
+        "placeholderDescribe": "Describe what you want to scout...",
+        "placeholderAnswer": "Type your answer..."
+      },
+      "response": {
+        "intro1": "I'll help you scout for Taylor Swift tickets! To set up your",
+        "intro2": "scout, I need a few details:",
+        "questionTitle": "Which city",
+        "questionCity": "should I search in?",
+        "questionBudget": "And what's your maximum budget per ticket?"
+      },
+      "prompt": "Scout for Taylor Swift tickets"
+    },
+    "scoutAgent": {
+      "rowFoundSuffix": "found",
+      "title": {
+        "inProgress": "Scout searching in progress",
+        "foundResults": "Found {count} results"
+      },
+      "metrics": {
+        "websitesSearched": "Websites searched",
+        "listingsFound": "Listings found",
+        "priceMatches": "Price matches",
+        "availableSeats": "Available seats",
+        "bestDeals": "Best deals"
+      },
+      "results": {
+        "searching": "Searching...",
+        "query": "Taylor Swift LA"
+      }
+    }
+  },
+  "header": {
+    "brand": {
+      "name": "Firecrawl"
+    },
+    "brandKit": {
+      "openInNewTab": "Open in new tab",
+      "copyLogoAsSvg": "Copy logo as SVG",
+      "downloadBrandAssets": "Download brand assets",
+      "visitBrandGuidelines": "Visit brand guidelines"
+    },
+    "nav": {
+      "scouts": "Scouts"
+    },
+    "userMenu": {
+      "signIn": "Sign In",
+      "settings": "Settings",
+      "signOut": "Sign Out",
+      "fallbackUser": "User"
+    },
+    "toggle": {
+      "ariaLabel": "Toggle menu"
+    },
+    "cta": {
+      "signUp": "Sign up"
+    }
+  }
+}

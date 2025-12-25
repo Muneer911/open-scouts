@@ -17,6 +17,7 @@ import { Connector } from "@/components/shared/layout/curvy-rect";
 import SymbolColored from "@/components/shared/icons/symbol-colored";
 import { useAuth } from "@/contexts/AuthContext";
 import posthog from "posthog-js";
+import { useI18n } from "@/contexts/I18nContext";
 
 type Scout = {
   id: string;
@@ -49,6 +50,7 @@ type Location = {
 export default function ScoutsPage() {
   const router = useRouter();
   const { user } = useAuth();
+  const { t } = useI18n();
   const [scouts, setScouts] = useState<Scout[]>([]);
   const [location, setLocation] = useState<Location | null>(null);
   const [loading, setLoading] = useState(true);
@@ -74,7 +76,7 @@ export default function ScoutsPage() {
           // Convert from UserLocation format to scout Location format
           const userLoc = data.location;
           setLocation({
-            city: userLoc.city || userLoc.country || "Unknown",
+            city: userLoc.city || userLoc.country || t("dashboard.scouts.unknown"),
             state: userLoc.state || undefined,
             country: userLoc.country || undefined,
             latitude: userLoc.latitude || 0,
@@ -110,7 +112,7 @@ export default function ScoutsPage() {
     const { data, error } = await supabase
       .from("scouts")
       .insert({
-        title: "New Scout",
+        title: t("dashboard.scouts.newScout"),
         location: location,
         user_id: user.id,
       })
@@ -175,23 +177,23 @@ export default function ScoutsPage() {
 
       <div className="container relative">
         {/* Corner connectors */}
-        <Connector className="absolute -top-10 -left-[10.5px]" />
-        <Connector className="absolute -top-10 -right-[10.5px]" />
+        <Connector className="absolute -top-10 -start-[10.5px]" />
+        <Connector className="absolute -top-10 -end-[10.5px]" />
 
         {/* Header Section */}
         <div className="py-48 lg:py-64 relative">
           {/* Bottom border */}
-          <div className="h-1 bottom-0 absolute w-screen left-[calc(50%-50vw)] bg-border-faint" />
-          <Connector className="absolute -bottom-10 -left-[10.5px]" />
-          <Connector className="absolute -bottom-10 -right-[10.5px]" />
+          <div className="h-1 bottom-0 absolute w-screen start-[calc(50%-50vw)] bg-border-faint" />
+          <Connector className="absolute -bottom-10 -start-[10.5px]" />
+          <Connector className="absolute -bottom-10 -end-[10.5px]" />
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-24 px-24">
             <div>
               <h1 className="text-title-h3 lg:text-title-h2 font-semibold text-accent-black">
-                Your Scouts
+                {t("dashboard.scouts.title")}
               </h1>
               <p className="text-body-large text-black-alpha-56 mt-4">
-                Manage your AI scouts that continuously search and notify you
+                {t("dashboard.scouts.subtitle")}
               </p>
             </div>
             <Button
@@ -200,24 +202,28 @@ export default function ScoutsPage() {
               className="flex items-center gap-8 shrink-0"
             >
               <Plus size={20} />
-              New Scout
+              {t("dashboard.scouts.createNewScout")}
             </Button>
           </div>
         </div>
 
         {/* Section label */}
         <div className="py-24 lg:py-32 relative">
-          <div className="h-1 bottom-0 absolute w-screen left-[calc(50%-50vw)] bg-border-faint" />
+          <div className="h-1 bottom-0 absolute w-screen start-[calc(50%-50vw)] bg-border-faint" />
 
           <div className="flex items-center gap-16">
             <div className="w-2 h-16 bg-heat-100" />
             <div className="flex gap-12 items-center text-mono-x-small text-black-alpha-32 font-mono">
               <Eye className="w-14 h-14" />
-              <span className="uppercase tracking-wider">All Scouts</span>
+              <span className="uppercase tracking-wider">
+                {t("dashboard.scouts.allScouts")}
+              </span>
               {scouts.length > 0 && (
                 <>
                   <span>·</span>
-                  <span className="text-heat-100">{scouts.length} total</span>
+                  <span className="text-heat-100">
+                    {t("dashboard.scouts.total", { count: scouts.length })}
+                  </span>
                 </>
               )}
             </div>
@@ -262,14 +268,14 @@ export default function ScoutsPage() {
             <div className="flex flex-col items-center justify-center py-80 text-center">
               <SymbolColored className="w-48 h-auto mb-24 opacity-30" />
               <h2 className="text-title-h4 font-semibold text-accent-black mb-8">
-                No scouts yet
+                {t("dashboard.scouts.emptyTitle")}
               </h2>
               <p className="text-body-large text-black-alpha-56 mb-24 max-w-400">
-                Create your first scout to start monitoring for updates
+                {t("dashboard.scouts.emptySubtitle")}
               </p>
               <Button onClick={createNewScout} size="large">
-                <Plus size={20} className="mr-8" />
-                Create Scout
+                <Plus size={20} className="me-8" />
+                {t("dashboard.scouts.createScout")}
               </Button>
             </div>
           ) : (
@@ -297,21 +303,25 @@ export default function ScoutsPage() {
                       {/* Delete button */}
                       <button
                         onClick={(e) => openDeleteDialog(scout, e)}
-                        className="opacity-0 group-hover:opacity-100 p-8 hover:bg-black-alpha-4 rounded-6 transition absolute top-12 right-12"
+                        className="opacity-0 group-hover:opacity-100 p-8 hover:bg-black-alpha-4 rounded-6 transition absolute top-12 end-12"
                       >
                         <Trash2 size={16} className="text-black-alpha-48" />
                       </button>
 
                       {/* Title with status */}
-                      <div className="flex items-center gap-10 mb-12 pr-32">
+                      <div className="flex items-center gap-10 mb-12 pe-32">
                         <div
                           className={`w-8 h-8 rounded-full flex-shrink-0 ${
                             scout.is_active ? "bg-green-500" : "bg-red-500"
                           }`}
-                          title={scout.is_active ? "Active" : "Inactive"}
+                          title={
+                            scout.is_active
+                              ? t("dashboard.scouts.status.active")
+                              : t("dashboard.scouts.status.inactive")
+                          }
                         />
                         <h3 className="text-label-large font-semibold text-accent-black truncate">
-                          {scout.title || "New Scout"}
+                          {scout.title || t("dashboard.scouts.newScout")}
                         </h3>
                       </div>
 
@@ -335,8 +345,11 @@ export default function ScoutsPage() {
                           <div className="flex items-center gap-8 text-mono-x-small font-mono text-black-alpha-40">
                             <Clock className="w-12 h-12" />
                             <span>
-                              Last run:{" "}
-                              {new Date(scout.last_run_at).toLocaleDateString()}
+                              {t("dashboard.scouts.lastRun", {
+                                date: new Date(
+                                  scout.last_run_at,
+                                ).toLocaleDateString(),
+                              })}
                             </span>
                           </div>
                         )}
@@ -351,7 +364,7 @@ export default function ScoutsPage() {
                         </span>
                         {scout.frequency && (
                           <span className="text-mono-x-small font-mono text-heat-100 bg-heat-100/10 px-8 py-4 rounded-4 capitalize">
-                            {scout.frequency.replace("_", " ")}
+                            {t(`dashboard.scouts.frequency.${scout.frequency}`)}
                           </span>
                         )}
                       </div>
@@ -368,18 +381,19 @@ export default function ScoutsPage() {
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent className="p-24">
           <DialogHeader>
-            <DialogTitle>Delete Scout</DialogTitle>
+            <DialogTitle>{t("dashboard.scouts.delete.title")}</DialogTitle>
             <DialogDescription className="mt-8">
-              Are you sure you want to delete &quot;{scoutToDelete?.title}
-              &quot;? This action cannot be undone.
+              {t("dashboard.scouts.delete.description", {
+                title: scoutToDelete?.title || "",
+              })}
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-row gap-12 justify-end mt-24">
             <Button variant="secondary" onClick={cancelDelete}>
-              Cancel
+              {t("dashboard.scouts.delete.cancel")}
             </Button>
             <Button onClick={confirmDeleteScout} variant="destructive">
-              Delete
+              {t("dashboard.scouts.delete.confirm")}
             </Button>
           </div>
         </DialogContent>

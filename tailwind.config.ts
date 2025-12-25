@@ -470,6 +470,7 @@ const themeConfig: Config = {
     },
     require("tailwind-gradient-mask-image"),
     require("@tailwindcss/typography"),
+    require("tailwindcss-rtl"),
   ],
 };
 

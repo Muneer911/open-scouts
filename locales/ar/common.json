@@ -1,0 +1,174 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "dashboard": "لوحة التحكم",
+    "settings": "الإعدادات"
+  },
+  "actions": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "confirm": "تأكيد",
+    "edit": "تعديل",
+    "create": "إنشاء"
+  },
+  "status": {
+    "loading": "جاري التحميل...",
+    "success": "تم بنجاح",
+    "error": "حدث خطأ",
+    "empty": "لا توجد بيانات"
+  },
+  "location": {
+    "selectCountry": "اختار الدولة",
+    "selectStateIn": "اختار المنطقة بـ {country}",
+    "selectCityIn": "اختار المدينة بـ {place}",
+    "selectPlaceholder": "اختار موقعك...",
+    "detectMyLocation": "حدّد موقعي",
+    "searchPlaceholder": "دوّر على {step}...",
+    "skipStateSelection": "تخطّى اختيار المنطقة",
+    "skipCitySelection": "تخطّى اختيار المدينة",
+    "back": "رجوع",
+    "noResults": "ما فيه نتائج",
+    "geoNotSupported": "متصفحك ما يدعم تحديد الموقع"
+  },
+  "home": {
+    "hero": {
+      "headlinePrefix": "Open",
+      "headlineAccent": "Scouts",
+      "subtitle": "سوّ سكوتس بالذكاء الاصطناعي يدورون لك ويعلّمونك إذا لقوا اللي تبيه"
+    },
+    "placeholders": [
+      "دوّر لي على تذاكر تايلور سويفت بمدينتي...",
+      "علّمني إذا مستر بيست جا لمدينتي...",
+      "دوّر لي مطاعم صينية جديدة قريبة مني...",
+      "دوّر لي سايبرتراك متاح للتجربة...",
+      "دوّر لي رحلات رخيصة لطوكيو الشهر الجاي...",
+      "دوّر لي توفر PS5 بالمحلات القريبة..."
+    ],
+    "actions": {
+      "createScout": "سوّ سكوت"
+    },
+    "alerts": {
+      "checkLimitError": "في مشكلة بالتأكد من عدد السكوتس. جرّب مرة ثانية.",
+      "limitReached": "وصلت حد ٥ سكوتس. احذف سكوت قديم عشان تسوي جديد.",
+      "createScoutError": "في مشكلة بتسوي السكوت: {message}"
+    },
+    "unknown": "غير معروف"
+  },
+  "homeSections": {
+    "recentDiscoveries": {
+      "kicker": "آخر الاكتشافات",
+      "badge": "اكتشافات لايف",
+      "descriptionPreview": "كذا بتكون الاكتشافات إذا سكوتسك لقوا شي.",
+      "descriptionLive": "نتايج لحظية من سكوتس حول العالم.",
+      "titlePreviewPrefix": "وش ممكن سكوتسك",
+      "titlePreviewAccent": "يلقون",
+      "titleLivePrefix": "آخر",
+      "titleLiveAccent": "الاكتشافات",
+      "previewTag": "تجربة",
+      "cta": "سوّ أول سكوت لك عشان تجيك الاكتشافات"
+    },
+    "howItWorks": {
+      "kicker": "وشلون يشتغل",
+      "badge": "وشلون يشتغل",
+      "description": "سوّ سكوتس قوية تشتغل طول اليوم وتلقط لك اللي تبيه.",
+      "titlePrefix": "من فكرة",
+      "titleAccent": "لاكتشاف",
+      "titleSuffix": "بدقايق",
+      "card": {
+        "title": "إعداد بالذكاء الاصطناعي",
+        "subtitle": "سولف عشان تضبطه",
+        "line1": "قل للمساعد وش تبي السكوت يدور لك.",
+        "line2": "وبيساعدك تضبط أفضل شروط للبحث."
+      }
+    },
+    "alwaysSearching": {
+      "kicker": "دايم يدور",
+      "badge": "بحث مستمر",
+      "description": "سكوتسك يشتغلون 24/7 بالخلفية ويدورون لك ويعلّمونك أول ما يلقون تطابق.",
+      "titlePrefix": "لا تفوّت",
+      "titleAccent": "فرصة",
+      "card": {
+        "title": "بحث مستمر",
+        "subtitle": "دايم يدور",
+        "line1": "سكوتك يشتغل تلقائي بالخلفية،",
+        "line2": "يدور ويعلّمك إذا طلع شي جديد."
+      }
+    },
+    "time": {
+      "secondsAgo": "قبل {count}ث",
+      "minutesAgo": "قبل {count}د",
+      "hoursAgo": "قبل {count}س",
+      "daysAgo": "قبل {count}ي",
+      "weeksAgo": "قبل {count}أ",
+      "monthsAgo": "قبل {count}ش",
+      "yearsAgo": "قبل {count}سنة"
+    },
+    "scoutChats": {
+      "assistantName": "مساعد السكوت",
+      "poweredBy": "مدعوم بـ",
+      "status": {
+        "configuring": "قاعد يضبط",
+        "step": "الخطوة {current} من {total}"
+      },
+      "userBubble": "دوّر لي تذاكر تايلور سويفت",
+      "thinking": "قاعد يفكر...",
+      "input": {
+        "placeholderDescribe": "وش تبي السكوت يدور لك...",
+        "placeholderAnswer": "اكتب ردّك..."
+      },
+      "response": {
+        "intro1": "تمام، بخليك تدور على تذاكر تايلور سويفت! عشان أضبط",
+        "intro2": "السكوت، احتاج منك كم معلومة:",
+        "questionTitle": "أي مدينة",
+        "questionCity": "أدور فيها؟",
+        "questionBudget": "وكم أعلى ميزانية للتذكرة؟"
+      },
+      "prompt": "دوّر لي تذاكر تايلور سويفت"
+    },
+    "scoutAgent": {
+      "rowFoundSuffix": "لقّى",
+      "title": {
+        "inProgress": "السكوت قاعد يدور",
+        "foundResults": "لقينا {count} نتيجة"
+      },
+      "metrics": {
+        "websitesSearched": "مواقع تم البحث فيها",
+        "listingsFound": "إعلانات/نتايج",
+        "priceMatches": "تطابقات سعر",
+        "availableSeats": "مقاعد متاحة",
+        "bestDeals": "أفضل العروض"
+      },
+      "results": {
+        "searching": "قاعد يدور...",
+        "query": "تايلور سويفت LA"
+      }
+    }
+  },
+  "header": {
+    "brand": {
+      "name": "Firecrawl"
+    },
+    "brandKit": {
+      "openInNewTab": "افتحه بتبويب جديد",
+      "copyLogoAsSvg": "انسخ الشعار SVG",
+      "downloadBrandAssets": "حمّل ملفات البراند",
+      "visitBrandGuidelines": "شوف دليل البراند"
+    },
+    "nav": {
+      "scouts": "السكوتس"
+    },
+    "userMenu": {
+      "signIn": "سجّل دخول",
+      "settings": "الإعدادات",
+      "signOut": "تسجيل خروج",
+      "fallbackUser": "مستخدم"
+    },
+    "toggle": {
+      "ariaLabel": "قائمة"
+    },
+    "cta": {
+      "signUp": "سجّل"
+    }
+  }
+}

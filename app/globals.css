@@ -56,7 +56,7 @@
   --color-foreground-dimmer: var(--foreground-dimmer);
 
   /* Fonts - SuisseIntl with system fonts as fallback */
-  --font-sans: 'SuisseIntl', var(--font-sans);
+  --font-sans: "SuisseIntl", var(--font-sans);
 
   /* Spacing */
   --spacing-base: 4px;
@@ -94,6 +94,10 @@ html {
   color-scheme: light;
 }
 
+html[dir="rtl"] {
+  font-size: 105%;
+}
+
 body {
   background: var(--background-base);
   color: var(--accent-black);
@@ -101,6 +105,11 @@ body {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+html[dir="rtl"] body {
+  font-family: var(--font-arabic), "Segoe UI Arabic", system-ui, sans-serif;
+  line-height: 1.75;
 }
 
 /* Force light mode - disable dark mode media query */
@@ -218,7 +227,8 @@ a:hover {
 }
 
 @keyframes selection-pulse-green {
-  0%, 100% {
+  0%,
+  100% {
     border-color: rgb(34, 197, 94);
     background-color: rgba(34, 197, 94, 0.05);
   }
@@ -229,7 +239,8 @@ a:hover {
 }
 
 @keyframes button-press {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -242,7 +253,12 @@ a:hover {
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(251, 146, 60, 0.8), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(251, 146, 60, 0.8),
+    transparent
+  );
   box-shadow: 0 0 10px rgba(251, 146, 60, 0.5);
   animation: scanner 3s linear infinite;
 }

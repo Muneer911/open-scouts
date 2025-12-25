@@ -12,6 +12,7 @@ import {
 import { MapPin, ChevronDown, Search, X, Check, Crosshair } from "lucide-react";
 import { cn } from "@/lib/utils";
 import PortalToBody from "@/components/shared/utils/portal-to-body";
+import { useI18n } from "@/contexts/I18nContext";
 
 export interface UserLocation {
   country: string;
@@ -38,6 +39,7 @@ export default function LocationSelector({
   disabled = false,
   showIdentifyButton = true,
 }: LocationSelectorProps) {
+  const { t } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState<Step>("country");
   const [search, setSearch] = useState("");
@@ -245,7 +247,7 @@ export default function LocationSelector({
   const handleIdentifyLocation = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!("geolocation" in navigator)) {
-      alert("Geolocation is not supported by your browser");
+      alert(t("common.location.geoNotSupported"));
       return;
     }
 
@@ -314,11 +316,15 @@ export default function LocationSelector({
     : null;
 
   const getStepTitle = () => {
-    if (step === "country") return "Select Country";
+    if (step === "country") return t("common.location.selectCountry");
     if (step === "state")
-      return "Select State in " + (selectedCountry?.name || "");
+      return t("common.location.selectStateIn", {
+        country: selectedCountry?.name || "",
+      });
     return (
-      "Select City in " + (selectedState?.name || selectedCountry?.name || "")
+      t("common.location.selectCityIn", {
+        place: selectedState?.name || selectedCountry?.name || "",
+      })
     );
   };
 
@@ -339,7 +345,7 @@ export default function LocationSelector({
         className={cn(
           "flex-1 flex items-center gap-12 px-16 py-12 rounded-8 border border-border-faint",
           "bg-white hover:border-black-alpha-16 transition-colors cursor-pointer",
-          "text-left",
+          "text-start",
           disabled && "opacity-50 cursor-not-allowed pointer-events-none",
           isOpen && "border-heat-100",
         )}
@@ -351,7 +357,7 @@ export default function LocationSelector({
             !displayValue && "text-black-alpha-40",
           )}
         >
-          {displayValue || "Select your location..."}
+          {displayValue || t("common.location.selectPlaceholder")}
         </span>
         {value && !disabled && (
           <span
@@ -383,7 +389,7 @@ export default function LocationSelector({
           type="button"
           onClick={handleIdentifyLocation}
           disabled={disabled || isIdentifying}
-          title="Detect my location"
+          title={t("common.location.detectMyLocation")}
           className={cn(
             "px-12 py-12 rounded-8 border border-border-faint",
             "bg-white hover:border-black-alpha-16 hover:bg-black-alpha-2 transition-colors",
@@ -423,13 +429,15 @@ export default function LocationSelector({
 
               {/* Search Input */}
               <div className="relative">
-                <Search className="absolute left-12 top-1/2 -translate-y-1/2 w-16 h-16 text-black-alpha-32" />
+                <Search className="absolute start-12 top-1/2 -translate-y-1/2 w-16 h-16 text-black-alpha-32" />
                 <input
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder={"Search " + step + "..."}
-                  className="w-full pl-36 pr-12 py-10 rounded-6 border border-border-faint text-body-medium placeholder:text-black-alpha-32 focus:outline-none focus:border-heat-100"
+                  placeholder={t("common.location.searchPlaceholder", {
+                    step,
+                  })}
+                  className="w-full ps-36 pe-12 py-10 rounded-6 border border-border-faint text-body-medium placeholder:text-black-alpha-32 focus:outline-none focus:border-heat-100"
                   autoFocus
                 />
               </div>
@@ -442,24 +450,24 @@ export default function LocationSelector({
                 <button
                   type="button"
                   onClick={handleSkipState}
-                  className="w-full px-16 py-12 text-left text-body-small text-heat-100 hover:bg-black-alpha-4 border-b border-border-faint"
+                  className="w-full px-16 py-12 text-start text-body-small text-heat-100 hover:bg-black-alpha-4 border-b border-border-faint"
                 >
-                  Skip state selection
+                  {t("common.location.skipStateSelection")}
                 </button>
               )}
               {step === "city" && (
                 <button
                   type="button"
                   onClick={handleSkipCity}
-                  className="w-full px-16 py-12 text-left text-body-small text-heat-100 hover:bg-black-alpha-4 border-b border-border-faint"
+                  className="w-full px-16 py-12 text-start text-body-small text-heat-100 hover:bg-black-alpha-4 border-b border-border-faint"
                 >
-                  Skip city selection
+                  {t("common.location.skipCitySelection")}
                 </button>
               )}
 
               {filteredItems.length === 0 ? (
                 <div className="px-16 py-24 text-center text-body-small text-black-alpha-40">
-                  No results found
+                  {t("common.location.noResults")}
                 </div>
               ) : (
                 filteredItems.map((item) => {
@@ -489,7 +497,7 @@ export default function LocationSelector({
                         else handleCitySelect(item as ICity);
                       }}
                       className={cn(
-                        "w-full px-16 py-10 text-left text-body-medium hover:bg-black-alpha-4 flex items-center justify-between",
+                        "w-full px-16 py-10 text-start text-body-medium hover:bg-black-alpha-4 flex items-center justify-between",
                         isSelected && "bg-heat-100/5",
                       )}
                     >
@@ -529,7 +537,7 @@ export default function LocationSelector({
                   }}
                   className="text-body-small text-black-alpha-56 hover:text-accent-black"
                 >
-                  Back
+                  {t("common.location.back")}
                 </button>
               </div>
             )}

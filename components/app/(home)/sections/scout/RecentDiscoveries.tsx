@@ -10,6 +10,7 @@ import { Connector } from "@/components/shared/layout/curvy-rect";
 import { supabase } from "@/lib/supabase/client";
 import { setIntervalOnVisible } from "@/utils/set-timeout-on-visible";
 import { encryptText } from "@/components/app/(home)/sections/hero/Title/Title";
+import { useI18n } from "@/contexts/I18nContext";
 
 import AiFlame from "../ai/Flame/Flame";
 
@@ -51,31 +52,31 @@ function BadgeIcon() {
 }
 
 // Helper function to get relative time
-const getRelativeTime = (dateString: string) => {
+const getRelativeTime = (dateString: string, t: (k: string, v?: any) => string) => {
   const now = new Date();
   const date = new Date(dateString);
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
   if (diffInSeconds < 60) {
-    return `${diffInSeconds}s ago`;
+    return t("common.homeSections.time.secondsAgo", { count: diffInSeconds });
   } else if (diffInSeconds < 3600) {
     const minutes = Math.floor(diffInSeconds / 60);
-    return `${minutes}m ago`;
+    return t("common.homeSections.time.minutesAgo", { count: minutes });
   } else if (diffInSeconds < 86400) {
     const hours = Math.floor(diffInSeconds / 3600);
-    return `${hours}h ago`;
+    return t("common.homeSections.time.hoursAgo", { count: hours });
   } else if (diffInSeconds < 604800) {
     const days = Math.floor(diffInSeconds / 86400);
-    return `${days}d ago`;
+    return t("common.homeSections.time.daysAgo", { count: days });
   } else if (diffInSeconds < 2592000) {
     const weeks = Math.floor(diffInSeconds / 604800);
-    return `${weeks}w ago`;
+    return t("common.homeSections.time.weeksAgo", { count: weeks });
   } else if (diffInSeconds < 31536000) {
     const months = Math.floor(diffInSeconds / 2592000);
-    return `${months}mo ago`;
+    return t("common.homeSections.time.monthsAgo", { count: months });
   } else {
     const years = Math.floor(diffInSeconds / 31536000);
-    return `${years}y ago`;
+    return t("common.homeSections.time.yearsAgo", { count: years });
   }
 };
 
@@ -143,10 +144,12 @@ function DiscoveryCard({
   execution,
   isPreview = false,
   onClick,
+  t,
 }: {
   execution: Execution;
   isPreview?: boolean;
   onClick?: () => void;
+  t: (k: string, v?: any) => string;
 }) {
   return (
     <div
@@ -164,8 +167,8 @@ function DiscoveryCard({
       }}
     >
       {isPreview && (
-        <div className="absolute top-12 right-12 px-8 py-4 rounded-full bg-black-alpha-5 text-mono-x-small font-mono text-black-alpha-40">
-          PREVIEW
+        <div className="absolute top-12 end-12 px-8 py-4 rounded-full bg-black-alpha-5 text-mono-x-small font-mono text-black-alpha-40">
+          {t("common.homeSections.recentDiscoveries.previewTag")}
         </div>
       )}
 
@@ -179,7 +182,7 @@ function DiscoveryCard({
           </p>
         </div>
         <p className="text-mono-x-small text-black-alpha-32 font-mono">
-          {getRelativeTime(execution.created_at)}
+          {getRelativeTime(execution.created_at, t)}
         </p>
       </div>
     </div>
@@ -212,6 +215,7 @@ function LoadingSkeleton() {
 
 export default function RecentDiscoveries() {
   const router = useRouter();
+  const { t } = useI18n();
   const [executions, setExecutions] = useState<Execution[]>([]);
   const [loadingExecutions, setLoadingExecutions] = useState(true);
   const [, setTick] = useState(0);
@@ -294,16 +298,16 @@ export default function RecentDiscoveries() {
 
       {/* Section Title */}
       <div className="-mt-1 pointer-events-none select-none relative container">
-        <Connector className="absolute right-[-10.5px] -top-10" />
-        <Connector className="absolute left-[-10.5px] -top-10" />
-        <Connector className="absolute right-[-10.5px] -bottom-10" />
-        <Connector className="absolute left-[-10.5px] -bottom-10" />
+        <Connector className="absolute end-[-10.5px] -top-10" />
+        <Connector className="absolute start-[-10.5px] -top-10" />
+        <Connector className="absolute end-[-10.5px] -bottom-10" />
+        <Connector className="absolute start-[-10.5px] -bottom-10" />
 
         <div className="relative grid lg:grid-cols-2 -mt-1">
-          <div className="h-1 bottom-0 absolute w-screen left-[calc(50%-50vw)] bg-border-faint" />
+          <div className="h-1 bottom-0 absolute w-screen start-[calc(50%-50vw)] bg-border-faint" />
 
           <div className="flex gap-40 py-24 lg:py-45 relative">
-            <div className="h-full w-1 right-0 top-0 bg-border-faint absolute lg-max:hidden" />
+            <div className="h-full w-1 end-0 top-0 bg-border-faint absolute lg-max:hidden" />
             <div className="w-2 h-16 bg-heat-100" />
 
             <div className="flex gap-12 items-center !text-mono-x-small text-black-alpha-16 font-mono">
@@ -314,7 +318,7 @@ export default function RecentDiscoveries() {
               <div className="w-8 text-center">·</div>
 
               <div className="uppercase text-black-alpha-32">
-                Recent Discoveries
+                {t("common.homeSections.recentDiscoveries.kicker")}
               </div>
             </div>
           </div>
@@ -327,24 +331,30 @@ export default function RecentDiscoveries() {
           badgeContent={
             <>
               <BadgeIcon />
-              <span>Live discoveries</span>
+              <span>{t("common.homeSections.recentDiscoveries.badge")}</span>
             </>
           }
           description={
             showPreview
-              ? "This is what discoveries will look like once your scouts find something."
-              : "Real-time findings from scouts around the world."
+              ? t("common.homeSections.recentDiscoveries.descriptionPreview")
+              : t("common.homeSections.recentDiscoveries.descriptionLive")
           }
           title={
             <>
               {showPreview ? (
                 <>
-                  What your scouts <br className="lg:hidden" />
-                  <span className="text-heat-100">will find</span>
+                  {t("common.homeSections.recentDiscoveries.titlePreviewPrefix")}{" "}
+                  <br className="lg:hidden" />
+                  <span className="text-heat-100">
+                    {t("common.homeSections.recentDiscoveries.titlePreviewAccent")}
+                  </span>
                 </>
               ) : (
                 <>
-                  Latest <span className="text-heat-100">discoveries</span>
+                  {t("common.homeSections.recentDiscoveries.titleLivePrefix")}{" "}
+                  <span className="text-heat-100">
+                    {t("common.homeSections.recentDiscoveries.titleLiveAccent")}
+                  </span>
                 </>
               )}
             </>
@@ -373,6 +383,7 @@ export default function RecentDiscoveries() {
                     key={execution.id}
                     execution={execution}
                     isPreview={showPreview}
+                    t={t}
                     onClick={
                       !showPreview
                         ? () => router.push(`/${execution.scout_id}`)
@@ -386,7 +397,7 @@ export default function RecentDiscoveries() {
             {showPreview && (
               <div className="mt-32 text-center">
                 <p className="text-body-medium text-black-alpha-48">
-                  Create your first scout to start receiving discoveries
+                  {t("common.homeSections.recentDiscoveries.cta")}
                 </p>
               </div>
             )}

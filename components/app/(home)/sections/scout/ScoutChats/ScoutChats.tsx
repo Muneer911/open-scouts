@@ -6,16 +6,18 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import Image from "@/components/shared/image/Image";
 import onVisible from "@/utils/on-visible";
+import { useI18n } from "@/contexts/I18nContext";
 
 import "./ScoutChats.css";
 
 export default function ScoutChats() {
+  const { t } = useI18n();
   const [step, setStep] = useState(-1);
 
   return (
     <div className="h-438 lg-max:relative lg-max:h-520">
       <div className="flex border-b border-border-faint">
-        <div className="py-18 px-15 flex gap-10 border-r border-border-faint">
+        <div className="py-18 px-15 flex gap-10 border-e border-border-faint">
           {Array.from({ length: 3 }).map((_, index) => (
             <div
               className="size-12 relative before:inside-border before:border-border-muted rounded-full"
@@ -24,20 +26,20 @@ export default function ScoutChats() {
           ))}
         </div>
 
-        <div className="py-12 px-16 flex-1 flex items-center border-r border-border-faint">
+        <div className="py-12 px-16 flex-1 flex items-center border-e border-border-faint">
           <Image
             alt="AI Assistant"
-            className="opacity-56 mr-8"
+            className="opacity-56 me-8"
             height={20}
             src="ai/bot"
             width={20}
           />
-          <div className="text-body-small mr-6 text-black-alpha-56">
-            Scout Assistant
+          <div className="text-body-small me-6 text-black-alpha-56">
+            {t("common.homeSections.scoutChats.assistantName")}
           </div>
 
           <div className="py-4 px-10 rounded-full bg-black-alpha-5 flex gap-2 items-center text-[12px]/[16px] font-[450] text-black-alpha-56">
-            <span>powered by</span>
+            <span>{t("common.homeSections.scoutChats.poweredBy")}</span>
             <span className="text-heat-100 font-medium">Firecrawl</span>
           </div>
         </div>
@@ -50,9 +52,14 @@ export default function ScoutChats() {
             </div>
           </div>
 
-          <span>Configuring</span>
+          <span>{t("common.homeSections.scoutChats.status.configuring")}</span>
           <span>·</span>
-          <span>Step 1 of 3</span>
+          <span>
+            {t("common.homeSections.scoutChats.status.step", {
+              current: 1,
+              total: 3,
+            })}
+          </span>
         </div>
       </div>
 
@@ -68,6 +75,7 @@ function ScoutChatsChat({
   step: number;
   setStep: (step: number) => void;
 }) {
+  const { t } = useI18n();
   return (
     <div>
       <InputPart setStep={setStep} step={step} />
@@ -75,7 +83,7 @@ function ScoutChatsChat({
       {step >= 2 && (
         <motion.div
           animate={{ y: 0, opacity: 1, rotate: 0 }}
-          className="absolute top-76 right-40"
+          className="absolute top-76 end-40"
           initial={{ y: 52, opacity: 0, rotate: -10 }}
           style={{ originX: 1 }}
           transition={{
@@ -87,7 +95,7 @@ function ScoutChatsChat({
         >
           <motion.div
             animate={{ x: 0 }}
-            className="absolute top-33 z-[2] -right-9 size-6 rounded-full bg-[#EFEFEF]"
+            className="absolute top-33 z-[2] -end-9 size-6 rounded-full bg-[#EFEFEF]"
             initial={{ x: -23 }}
             transition={{
               type: "spring",
@@ -97,10 +105,10 @@ function ScoutChatsChat({
             }}
           />
 
-          <div className="absolute top-19 z-[1] -right-3 size-16 rounded-full bg-[#EFEFEF]" />
+          <div className="absolute top-19 z-[1] -end-3 size-16 rounded-full bg-[#EFEFEF]" />
 
           <div className="bg-black-alpha-5 text-body-medium py-8 px-16 rounded-full">
-            Scout for Taylor Swift tickets
+            {t("common.homeSections.scoutChats.userBubble")}
           </div>
         </motion.div>
       )}
@@ -108,7 +116,7 @@ function ScoutChatsChat({
       {step >= 3 && (
         <motion.div
           animate={{ x: 0, opacity: 1 }}
-          className="left-40 top-128 absolute flex gap-16"
+          className="start-40 top-128 absolute flex gap-16"
           initial={{ x: -8, opacity: 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
         >
@@ -141,7 +149,7 @@ function ScoutChatsChat({
           <AnimatePresence initial={false} mode="popLayout">
             <motion.div
               animate={{ x: 0, opacity: 1 }}
-              className="pt-8 text-body-medium flex-1 min-w-0 pr-40"
+              className="pt-8 text-body-medium flex-1 min-w-0 pe-40"
               exit={{ x: 8, opacity: 0 }}
               initial={{ x: -8, opacity: 0 }}
               key={step < 4 ? "thinking" : "response"}
@@ -149,7 +157,7 @@ function ScoutChatsChat({
             >
               {step < 4 ? (
                 <div className="scout-chats-chat-thinking whitespace-nowrap">
-                  is thinking...
+                  {t("common.homeSections.scoutChats.thinking")}
                 </div>
               ) : (
                 <ResponsePart setStep={setStep} step={step} />
@@ -169,17 +177,18 @@ const ResponsePart = ({
   step: number;
   setStep: (step: number) => void;
 }) => {
+  const { t } = useI18n();
   const [response, setResponse] = useState("");
 
   useEffect(() => {
     let index = 0;
     const lines = [
-      "I'll help you scout for Taylor Swift tickets! To set up your",
-      "scout, I need a few details:",
+      t("common.homeSections.scoutChats.response.intro1"),
+      t("common.homeSections.scoutChats.response.intro2"),
       "",
-      "Which city",
-      "should I search in?",
-      "And what's your maximum budget per ticket?",
+      t("common.homeSections.scoutChats.response.questionTitle"),
+      t("common.homeSections.scoutChats.response.questionCity"),
+      t("common.homeSections.scoutChats.response.questionBudget"),
     ];
 
     const strSlice = (strIndex: number) => {
@@ -205,9 +214,9 @@ const ResponsePart = ({
       ` +
           (index > lines[0].length + lines[1].length
             ? `
-        <ul class='list-disc pl-8'>
-          <li class='pl-10'><span class="text-label-medium">${strSlice(3)}</span> ${strSlice(4)}</li>
-          <li class='pl-10'>${strSlice(5)}</li>
+        <ul class='list-disc ps-8'>
+          <li class='ps-10'><span class="text-label-medium">${strSlice(3)}</span> ${strSlice(4)}</li>
+          <li class='ps-10'>${strSlice(5)}</li>
         </ul>`
             : ""),
       );
@@ -234,7 +243,7 @@ const ResponsePart = ({
     }, 20);
 
     return () => clearInterval(interval);
-  }, [setStep]);
+  }, [setStep, t]);
 
   return (
     <div className="text-body-medium">
@@ -262,7 +271,7 @@ const ResponsePart = ({
   );
 };
 
-const PROMPT = "Scout for Taylor Swift tickets";
+const PROMPT_KEY = "common.homeSections.scoutChats.prompt";
 
 const InputPart = ({
   step,
@@ -271,9 +280,12 @@ const InputPart = ({
   step: number;
   setStep: (step: number) => void;
 }) => {
+  const { t } = useI18n();
   const [inputText, setInputText] = useState("");
   const buttonRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
+
+  const prompt = t(PROMPT_KEY);
 
   useEffect(() => {
     onVisible(
@@ -291,17 +303,17 @@ const InputPart = ({
               () => {
                 if (window.innerWidth < 996) {
                   setInputText(
-                    PROMPT.slice(
-                      Math.max(0, index + 1 - (PROMPT.length - 2)),
+                    prompt.slice(
+                      Math.max(0, index + 1 - (prompt.length - 2)),
                       index + 1,
                     ),
                   );
                 } else {
-                  setInputText(PROMPT.slice(0, index + 1));
+                  setInputText(prompt.slice(0, index + 1));
                 }
                 index++;
 
-                if (index >= PROMPT.length) {
+                if (index >= prompt.length) {
                   buttonRef
                     .current!.animate(
                       [
@@ -340,14 +352,14 @@ const InputPart = ({
       },
       1,
     );
-  }, [setStep]);
+  }, [setStep, prompt, t]);
 
   if (step === -1) return null;
 
   return (
     <motion.div
       animate={{ y: 0, opacity: 1, scale: 1 }}
-      className="absolute inset-x-24 bottom-24 bg-white-alpha-72 rounded-full p-12 pl-20 flex gap-8 items-center"
+      className="absolute inset-x-24 bottom-24 bg-white-alpha-72 rounded-full p-12 ps-20 flex gap-8 items-center"
       initial={{ y: 32, opacity: 0, scale: 0.95 }}
       ref={inputRef}
       style={{
@@ -360,12 +372,14 @@ const InputPart = ({
           if (step === -1 || step === 0)
             return (
               <div className="text-black-alpha-48">
-                Describe what you want to scout...
+                {t("common.homeSections.scoutChats.input.placeholderDescribe")}
               </div>
             );
           if (step >= 2)
             return (
-              <div className="text-black-alpha-48">Type your answer...</div>
+              <div className="text-black-alpha-48">
+                {t("common.homeSections.scoutChats.input.placeholderAnswer")}
+              </div>
             );
 
           return (

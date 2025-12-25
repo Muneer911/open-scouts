@@ -5,6 +5,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 
 import { encryptText } from "@/components/app/(home)/sections/hero/Title/Title";
 import { setIntervalOnVisible } from "@/utils/set-timeout-on-visible";
+import { useI18n } from "@/contexts/I18nContext";
 
 export default function ScoutAgentResults({
   step,
@@ -17,7 +18,7 @@ export default function ScoutAgentResults({
 
   return (
     <div
-      className="lg:absolute lg-max:h-244 overflow-hidden lg:inset-y-24 lg-max:mt-16 lg:right-24 bg-white-alpha-72 backdrop-blur-4 rounded-20 w-[calc(100%-32px)] lg-max:mx-auto relative lg:w-272"
+      className="lg:absolute lg-max:h-244 overflow-hidden lg:inset-y-24 lg-max:mt-16 lg:end-24 bg-white-alpha-72 backdrop-blur-4 rounded-20 w-[calc(100%-32px)] lg-max:mx-auto relative lg:w-272"
       style={{
         boxShadow:
           "0px 40px 48px -20px rgba(0, 0, 0, 0.02), 0px 32px 32px -20px rgba(0, 0, 0, 0.03), 0px 16px 24px -12px rgba(0, 0, 0, 0.03), 0px 0px 0px 1px rgba(0, 0, 0, 0.03)",
@@ -71,7 +72,7 @@ export default function ScoutAgentResults({
                           {item.url}
                         </div>
 
-                        <div className="ml-auto text-label-small text-heat-100">
+                        <div className="ms-auto text-label-small text-heat-100">
                           {item.price}
                         </div>
                       </div>
@@ -87,7 +88,7 @@ export default function ScoutAgentResults({
   );
 }
 
-const QUERY = "Taylor Swift LA";
+const QUERY_FALLBACK = "Taylor Swift LA";
 
 const Input = ({
   step,
@@ -96,8 +97,11 @@ const Input = ({
   step: number;
   setStep: (step: number) => void;
 }) => {
+  const { t } = useI18n();
   const [inputText, setInputText] = useState("");
   const indexRef = useRef(0);
+
+  const query = t("common.homeSections.scoutAgent.results.query") || QUERY_FALLBACK;
 
   useEffect(() => {
     if (step === -1) return;
@@ -117,16 +121,16 @@ const Input = ({
     const tick = () => {
       timeout = window.setTimeout(
         () => {
-          setInputText(QUERY.slice(0, indexRef.current + 1));
+          setInputText(query.slice(0, indexRef.current + 1));
           indexRef.current++;
 
           const nextStep = Math.floor(
-            Math.min(indexRef.current / QUERY.length, 1) * 4,
+            Math.min(indexRef.current / query.length, 1) * 4,
           );
 
           setStep(nextStep);
 
-          if (indexRef.current >= QUERY.length) {
+          if (indexRef.current >= query.length) {
             return;
           }
 
@@ -166,7 +170,11 @@ const Input = ({
 
       {(() => {
         if (step === -1)
-          return <div className="text-black-alpha-48">Searching...</div>;
+          return (
+            <div className="text-black-alpha-48">
+              {t("common.homeSections.scoutAgent.results.searching")}
+            </div>
+          );
 
         return (
           <div>
@@ -176,7 +184,7 @@ const Input = ({
         );
       })()}
 
-      <div className="h-1 w-full bg-border-faint absolute bottom-0 left-0" />
+      <div className="h-1 w-full bg-border-faint absolute bottom-0 start-0" />
     </div>
   );
 };

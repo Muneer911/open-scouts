@@ -33,6 +33,7 @@ import { Loader } from "@/components/ai-elements/loader";
 import posthog from "posthog-js";
 import { ScoutSettingsModal } from "@/components/scout-settings-modal";
 import { Button } from "@/components/ui/shadcn-default/button";
+import { useI18n } from "@/contexts/I18nContext";
 import {
   Tooltip,
   TooltipContent,
@@ -75,6 +76,8 @@ export default function ScoutPage() {
   const scoutId = params.id as string;
   const initialQuery = searchParams.get("initialQuery");
   const hasAutoSubmitted = useRef(false);
+
+  const { t } = useI18n();
 
   const [input, setInput] = useState("");
   const [location, setLocation] = useState<Location | null>(null);
@@ -168,7 +171,7 @@ export default function ScoutPage() {
 
       // Convert to Location type
       const locationData: Location = {
-        city: city || country || "Unknown",
+        city: city || country || t("dashboard.scout.unknown"),
         state: state || undefined,
         country: country || undefined,
         latitude,
@@ -207,7 +210,8 @@ export default function ScoutPage() {
         if (data?.location) {
           const userLoc = data.location;
           const locationData: Location = {
-            city: userLoc.city || userLoc.country || "Unknown",
+            city:
+              userLoc.city || userLoc.country || t("dashboard.scout.unknown"),
             state: userLoc.state || undefined,
             country: userLoc.country || undefined,
             latitude: userLoc.latitude || 0,
@@ -276,7 +280,7 @@ export default function ScoutPage() {
     const { data, error } = await supabase
       .from("scouts")
       .insert({
-        title: "New Scout",
+        title: t("dashboard.scout.newScout"),
         location: location,
       })
       .select()
@@ -462,9 +466,9 @@ export default function ScoutPage() {
           <div className="max-w-4xl mx-auto flex items-center justify-between gap-12">
             <div className="flex-1 min-w-0">
               <h1 className="text-body-large md:text-title-h4 text-gray-900 truncate font-semibold">
-                {currentScout.title || "New Scout"}
+                {currentScout.title || t("dashboard.scout.newScout")}
                 {currentScout.goal && (
-                  <span className="hidden md:inline text-body-small text-gray-500 font-normal ml-8">
+                  <span className="hidden md:inline text-body-small text-gray-500 font-normal ms-8">
                     ({currentScout.goal})
                   </span>
                 )}
@@ -478,7 +482,9 @@ export default function ScoutPage() {
                   }`}
                 />
                 <span className="hidden md:inline text-body-medium text-gray-600 whitespace-nowrap">
-                  {currentScout.is_active ? "Active" : "Inactive"}
+                  {currentScout.is_active
+                    ? t("dashboard.scout.status.active")
+                    : t("dashboard.scout.status.inactive")}
                 </span>
               </div>
               <Button
@@ -505,7 +511,7 @@ export default function ScoutPage() {
                     {messages.length === 0 ? (
                       <div className="flex-1 flex items-center justify-center text-gray-500 py-48">
                         <p className="text-body-medium text-gray-400">
-                          Start by describing what you want to scout...
+                          {t("dashboard.scout.startPrompt")}
                         </p>
                       </div>
                     ) : (
@@ -554,7 +560,7 @@ export default function ScoutPage() {
                                           <MessageActions className="mt-8">
                                             <MessageAction
                                               onClick={() => regenerate()}
-                                              label="Retry"
+                                              label={t("dashboard.scout.messageActions.retry")}
                                             >
                                               <RefreshCcwIcon className="w-12 h-12" />
                                             </MessageAction>
@@ -564,7 +570,7 @@ export default function ScoutPage() {
                                                   part.text,
                                                 )
                                               }
-                                              label="Copy"
+                                              label={t("dashboard.scout.messageActions.copy")}
                                             >
                                               <CopyIcon className="w-12 h-12" />
                                             </MessageAction>
@@ -593,7 +599,7 @@ export default function ScoutPage() {
                       <div className="bg-primary rounded-full px-12 py-6 shadow-sm flex items-center gap-8 text-white">
                         <Loader size={14} />
                         <span className="text-body-small">
-                          Setting up your scout...
+                          {t("dashboard.scout.settingUp")}
                         </span>
                       </div>
                     </div>
@@ -606,8 +612,8 @@ export default function ScoutPage() {
                       <PromptInputTextarea
                         onChange={(e) => setInput(e.target.value)}
                         value={input}
-                        placeholder="Describe what you'd like to scout and our agent will handle the rest..."
-                        className="pr-56 w-full"
+                        placeholder={t("dashboard.scout.inputPlaceholderDesktop")}
+                        className="pe-56 w-full"
                       />
                     </PromptInput>
                     <button
@@ -619,7 +625,7 @@ export default function ScoutPage() {
                         ) as HTMLFormElement;
                         if (form) form.requestSubmit();
                       }}
-                      className="absolute bottom-8 right-8 w-40 h-40 rounded-8 bg-heat-100 text-white flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:bg-heat-80 transition-colors"
+                      className="absolute bottom-8 end-8 w-40 h-40 rounded-8 bg-heat-100 text-white flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:bg-heat-80 transition-colors"
                     >
                       <CornerDownLeftIcon className="w-20 h-20" />
                     </button>
@@ -635,8 +641,8 @@ export default function ScoutPage() {
                         currentScout.frequency;
 
                       const buttonText = currentScout.is_active
-                        ? "Update Scout"
-                        : "Activate Scout";
+                        ? t("dashboard.scout.actions.update")
+                        : t("dashboard.scout.actions.activate");
 
                       return (
                         <div className="mt-8 flex justify-end">
@@ -659,7 +665,9 @@ export default function ScoutPage() {
                               {!isComplete && (
                                 <TooltipContent>
                                   <p className="text-body-small">
-                                    Complete scout configuration first
+                                    {t(
+                                      "dashboard.scout.tooltip.completeConfigurationFirst",
+                                    )}
                                   </p>
                                 </TooltipContent>
                               )}
@@ -680,10 +688,10 @@ export default function ScoutPage() {
           <div className="flex-1 flex items-center justify-center text-gray-500">
             <div className="text-center">
               <p className="text-title-h5 mb-16">
-                Create a new scout to get started
+                {t("dashboard.scout.emptyState.title")}
               </p>
               <Button onClick={() => router.push("/scouts")} size="lg">
-                Go to Scouts
+                {t("dashboard.scout.emptyState.goToScouts")}
               </Button>
             </div>
           </div>
@@ -691,14 +699,14 @@ export default function ScoutPage() {
 
         {/* Mobile fixed bottom input */}
         {scoutId && scoutId !== "new" && messagesLoaded && (
-          <div className="md:hidden fixed bottom-0 left-0 right-0 bg-gray-50 border-t border-gray-200 p-12 pb-[calc(12px+env(safe-area-inset-bottom))] mx-20">
+          <div className="md:hidden fixed bottom-0 start-0 end-0 bg-gray-50 border-t border-gray-200 p-12 pb-[calc(12px+env(safe-area-inset-bottom))] mx-20">
             {/* Streaming indicator */}
             {isLoading && (
               <div className="flex items-center justify-center gap-8 mb-8">
                 <div className="bg-primary rounded-full px-12 py-6 shadow-sm flex items-center gap-8 text-white">
                   <Loader size={14} />
                   <span className="text-body-small">
-                    Setting up your scout...
+                    {t("dashboard.scout.settingUp")}
                   </span>
                 </div>
               </div>
@@ -711,8 +719,8 @@ export default function ScoutPage() {
                 <PromptInputTextarea
                   onChange={(e) => setInput(e.target.value)}
                   value={input}
-                  placeholder="Describe what you'd like to scout..."
-                  className="pr-56 w-full"
+                  placeholder={t("dashboard.scout.inputPlaceholderMobile")}
+                  className="pe-56 w-full"
                 />
               </PromptInput>
               <button
@@ -724,7 +732,7 @@ export default function ScoutPage() {
                   ) as HTMLFormElement;
                   if (form) form.requestSubmit();
                 }}
-                className="absolute bottom-8 right-8 w-40 h-40 rounded-8 bg-heat-100 text-white flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:bg-heat-80 transition-colors"
+                className="absolute bottom-8 end-8 w-40 h-40 rounded-8 bg-heat-100 text-white flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:bg-heat-80 transition-colors"
               >
                 <CornerDownLeftIcon className="w-20 h-20" />
               </button>
@@ -740,8 +748,8 @@ export default function ScoutPage() {
                   currentScout.frequency;
 
                 const buttonText = currentScout.is_active
-                  ? "Update Scout"
-                  : "Activate Scout";
+                  ? t("dashboard.scout.actions.update")
+                  : t("dashboard.scout.actions.activate");
 
                 return (
                   <div className="mt-8 flex justify-end">
@@ -764,7 +772,9 @@ export default function ScoutPage() {
                         {!isComplete && (
                           <TooltipContent>
                             <p className="text-body-small">
-                              Complete scout configuration first
+                              {t(
+                                "dashboard.scout.tooltip.completeConfigurationFirst",
+                              )}
                             </p>
                           </TooltipContent>
                         )}

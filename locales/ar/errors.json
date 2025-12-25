@@ -1,0 +1,37 @@
+{
+  "network": {
+    "offline": "لا يوجد اتصال بالإنترنت",
+    "timeout": "انتهت مهلة الطلب",
+    "serverError": "خطأ في الخادم، يرجى المحاولة لاحقاً"
+  },
+  "auth": {
+    "invalidCredentials": "بيانات الدخول غير صحيحة",
+    "sessionExpired": "انتهت صلاحية الجلسة",
+    "unauthorized": "غير مصرح لك بالوصول"
+  },
+  "validation": {
+    "required": "هذا الحقل مطلوب",
+    "invalidFormat": "الصيغة غير صحيحة",
+    "tooLong": "القيمة طويلة جداً",
+    "tooShort": "القيمة قصيرة جداً"
+  },
+  "pages": {
+    "errorBoundary": {
+      "title": "فيه مشكلة...",
+      "goHome": "ارجع للرئيسية",
+      "tryAgain": "جرّب مرة ثانية",
+      "unexpected": "صار خطأ ما",
+      "copy": {
+        "copied": "تم النسخ!",
+        "copyError": "انسخ الخطأ",
+        "errorPrefix": "خطأ:",
+        "idPrefix": "المعرّف:",
+        "stackPrefix": "التتبّع:"
+      }
+    },
+    "notFound": {
+      "title": "404 - ما لقينا الصفحة",
+      "goBackHome": "ارجع للرئيسية"
+    }
+  }
+}

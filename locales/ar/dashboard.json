@@ -1,0 +1,121 @@
+{
+  "title": "لوحة التحكم",
+  "welcome": "مرحباً {name}",
+  "empty": "لا توجد بيانات لعرضها",
+  "tryAgain": "يُرجى المحاولة مرة أخرى",
+  "scouts": {
+    "title": "سكوتسك",
+    "subtitle": "رتّب سكوتسك اللي يدورون لك ويعلّمونك إذا صار شي",
+    "newScout": "سكوت جديد",
+    "createNewScout": "سكوت جديد",
+    "allScouts": "كل السكوتس",
+    "total": "{count} بالمجموع",
+    "emptyTitle": "ما عندك سكوتس للحين",
+    "emptySubtitle": "سوّ أول سكوت لك عشان يبدأ يراقب لك التحديثات",
+    "createScout": "سوّ سكوت",
+    "status": {
+      "active": "شغّال",
+      "inactive": "موقوف"
+    },
+    "lastRun": "آخر تشغيل: {date}",
+    "unknown": "غير معروف",
+    "delete": {
+      "title": "حذف السكوت",
+      "description": "متأكد تبي تحذف \"{title}\"؟ ما تقدر ترجعها.",
+      "cancel": "إلغاء",
+      "confirm": "حذف"
+    },
+    "frequency": {
+      "daily": "يومي",
+      "every_3_days": "كل ٣ أيام",
+      "weekly": "أسبوعي"
+    }
+  },
+  "scout": {
+    "startPrompt": "ابدأ وقل وش تبي السكوت يدور لك...",
+    "settingUp": "قاعد أجهّز سكوتك...",
+    "inputPlaceholderDesktop": "اكتب وش تبي السكوت يدور لك عليه، والباقي علينا...",
+    "inputPlaceholderMobile": "اكتب وش تبي السكوت يدور لك...",
+    "messageActions": {
+      "retry": "جرّب مرة ثانية",
+      "copy": "انسخ"
+    },
+    "actions": {
+      "update": "حدّث السكوت",
+      "activate": "فعّل السكوت"
+    },
+    "tooltip": {
+      "completeConfigurationFirst": "كمّل إعدادات السكوت أول"
+    },
+    "newScout": "سكوت جديد",
+    "status": {
+      "active": "شغّال",
+      "inactive": "موقوف"
+    },
+    "emptyState": {
+      "title": "سوّ سكوت جديد وابدأ",
+      "goToScouts": "روح للسكوتس"
+    },
+    "unknown": "غير معروف"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "subtitle": "اضبط تفضيلات حسابك",
+    "sections": {
+      "firecrawl": {
+        "label": "تكامل Firecrawl",
+        "sponsoredTitle": "تكامل مدعوم",
+        "sponsoredDescription": "Open Scouts يعطيك مفتاح Firecrawl مجاني للتجربة. التكامل المدعوم رصيده محدود. إذا تبي استخدام بلا حدود، حط مفتاحك تحت.",
+        "statusLabel": "الحالة:",
+        "creditsLabel": "الرصيد:",
+        "loading": "جاري التحميل...",
+        "remaining": "متبقي",
+        "unableToFetch": "ما قدرنا نجيب الرصيد",
+        "connectedSince": "متصل من {date}",
+        "creditsExhausted": "خلص رصيد الدعم. حط مفتاحك تحت عشان استخدام بلا حدود.",
+        "actions": {
+          "connecting": "قاعد يتصل...",
+          "waitSeconds": "انتظر {seconds}ث",
+          "connectNow": "اتصل الحين",
+          "reconnect": "أعد الاتصال"
+        },
+        "customKey": {
+          "title": "مفتاحك الخاص",
+          "active": "شغّال",
+          "description": "حط مفتاح Firecrawl حقك عشان استخدام بلا حدود. بيصير يستخدم مفتاحك بدل التكامل المدعوم.",
+          "getKeyHere": "خذ مفتاحك من هنا",
+          "placeholder": "fc-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "saving": "قاعد يحفظ...",
+          "saveKey": "احفظ المفتاح",
+          "remove": "احذف",
+          "removed": "تم حذف المفتاح",
+          "enterNewKey": "اكتب مفتاح جديد",
+          "invalidPrefix": "لازم المفتاح يبدأ بـ 'fc-'"
+        },
+        "footer": "مدعوم بـ Firecrawl - سحب بيانات للذكاء الاصطناعي"
+      },
+      "location": {
+        "label": "الموقع",
+        "title": "موقعك",
+        "description": "حدد موقعك الافتراضي للسكوتس. بيستخدمه يوم تسوي سكوت جديد عشان نتايج أدق حسب الموقع.",
+        "saved": "تم حفظ الموقع!",
+        "saveFailed": "ما قدرنا نحفظ الموقع",
+        "footer": "موقعك يساعد السكوتس يجيبون نتايج محلية أدق"
+      },
+      "notifications": {
+        "label": "التنبيهات",
+        "emailTitle": "تنبيهات البريد",
+        "emailDescription": "بنرسل لك تنبيهات السكوت على إيميل حسابك إذا طلع شي جديد.",
+        "send": {
+          "sending": "جاري الإرسال...",
+          "sendTest": "ارسل بريد تجريبي",
+          "waitSeconds": "انتظر {seconds}ث",
+          "success": "تم إرسال البريد! شيّك الوارد.",
+          "mustBeLoggedIn": "لازم تكون مسجّل دخول عشان ترسل بريد تجريبي. حدّث الصفحة وجرّب.",
+          "failed": "فشل إرسال البريد التجريبي"
+        },
+        "footer": "خيارات تنبيه أكثر (SMS, Slack, Discord) قريباً..."
+      }
+    }
+  }
+}

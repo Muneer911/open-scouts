@@ -20,6 +20,7 @@ import AlwaysSearching from "@/components/app/(home)/sections/scout/AlwaysSearch
 import RecentDiscoveries from "@/components/app/(home)/sections/scout/RecentDiscoveries";
 import { useAuth } from "@/contexts/AuthContext";
 import posthog from "posthog-js";
+import { useI18n } from "@/contexts/I18nContext";
 
 // Memoize background effect components to prevent re-renders during typing
 const MemoizedHomeHeroPixi = memo(HomeHeroPixi);
@@ -27,7 +28,7 @@ const MemoizedHeroFlame = memo(HeroFlame);
 const MemoizedBackgroundOuterPiece = memo(BackgroundOuterPiece);
 const MemoizedHomeHeroBackground = memo(HomeHeroBackground);
 
-const placeholders = [
+const fallbackPlaceholders = [
   "Scout for Taylor Swift tickets in my city...",
   "Tell me when Mr. Beast comes to my city...",
   "Scout for new Chinese restaurants near me...",
@@ -41,7 +42,12 @@ function HomeContent() {
   const searchParams = useSearchParams();
   const pendingQuery = searchParams.get("pendingQuery");
   const { user, isLoading: authLoading } = useAuth();
+  const { t, messages } = useI18n();
   const hasProcessedPendingQuery = useRef(false);
+
+  const placeholders =
+    (((messages as any)?.common?.home?.placeholders as string[]) ||
+      fallbackPlaceholders) as string[];
 
   const [query, setQuery] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -79,7 +85,8 @@ function HomeContent() {
           if (prefs?.location) {
             const userLoc = prefs.location;
             location = {
-              city: userLoc.city || userLoc.country || "Unknown",
+              city:
+                userLoc.city || userLoc.country || t("common.home.unknown"),
               state: userLoc.state || undefined,
               country: userLoc.country || undefined,
               latitude: userLoc.latitude || 0,
@@ -96,15 +103,13 @@ function HomeContent() {
 
         if (countError) {
           console.error("Error checking scout count:", countError);
-          alert("Error checking scout limit. Please try again.");
+          alert(t("common.home.alerts.checkLimitError"));
           setIsSubmitting(false);
           return;
         }
 
         if (scoutCount !== null && scoutCount >= 5) {
-          alert(
-            "You have reached the maximum limit of 5 scouts. Please delete an existing scout to create a new one.",
-          );
+          alert(t("common.home.alerts.limitReached"));
           setIsSubmitting(false);
           return;
         }
@@ -128,7 +133,7 @@ function HomeContent() {
             error.code,
             error.details,
           );
-          alert(`Error creating scout: ${error.message}`);
+          alert(t("common.home.alerts.createScoutError", { message: error.message }));
           setIsSubmitting(false);
           return;
         }
@@ -218,12 +223,13 @@ function HomeContent() {
             <div className="max-w-5xl w-full mx-auto">
               <div className="text-center mb-6">
                 <h1 className="text-4xl md:text-7xl text-[#262626] mb-4">
-                  Open <span className="text-heat-100">Scouts</span>
+                  {t("common.home.hero.headlinePrefix")}{" "}
+                  <span className="text-heat-100">
+                    {t("common.home.hero.headlineAccent")}
+                  </span>
                 </h1>
                 <p className="text-lg md:text-lg text-gray-600">
-                  Create AI scouts that continuously search and notify you when
-                  <br></br>
-                  they find what you&apos;re looking for
+                  {t("common.home.hero.subtitle")}
                 </p>
               </div>
 
@@ -233,6 +239,7 @@ function HomeContent() {
                   onChange={(e) => setQuery(e.target.value)}
                   onSubmit={handleSubmit}
                   value={query}
+                  submitLabel={t("common.home.actions.createScout")}
                 />
               </div>
             </div>

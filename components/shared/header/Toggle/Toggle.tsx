@@ -3,12 +3,14 @@
 import Button from "@/components/ui/shadcn/button";
 import { useHeaderContext } from "@/components/shared/header/HeaderContext";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/contexts/I18nContext";
 
 export default function HeaderToggle({
   dropdownContent,
 }: {
   dropdownContent: React.ReactNode;
 }) {
+  const { t } = useI18n();
   const {
     dropdownContent: headerDropdownContent,
     clearDropdown,
@@ -26,7 +28,7 @@ export default function HeaderToggle({
           setDropdownContent(dropdownContent);
         }
       }}
-      aria-label="Toggle menu"
+      aria-label={t("common.header.toggle.ariaLabel")}
     >
       <svg
         className="!size-20"

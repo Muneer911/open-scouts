@@ -10,6 +10,7 @@ import CopyIcon from "@/components/shared/icons/copy";
 import CopiedIcon from "@/components/shared/icons/copied";
 import ScrambleText from "@/components/ui/motion/scramble-text";
 import { AnimatePresence, motion } from "motion/react";
+import { useI18n } from "@/contexts/I18nContext";
 
 export default function ErrorBoundary({
   error,
@@ -19,6 +20,7 @@ export default function ErrorBoundary({
   reset: () => void;
 }) {
   const router = useRouter();
+  const { t } = useI18n();
   const [copied, setCopied] = useState(false);
   const [isInView, setIsInView] = useState(false);
   const copiedTimeout = useRef<NodeJS.Timeout | null>(null);
@@ -30,9 +32,17 @@ export default function ErrorBoundary({
   }, [error]);
 
   const handleCopy = () => {
-    const errorText = `Error: ${error.message || "An unexpected error occurred"}${
-      error.digest ? `\nID: ${error.digest}` : ""
-    }${error.stack ? `\n\nStack:\n${error.stack}` : ""}`;
+    const errorText = `${t("errors.pages.errorBoundary.copy.errorPrefix")} ${
+      error.message || t("errors.pages.errorBoundary.unexpected")
+    }${
+      error.digest
+        ? `\n${t("errors.pages.errorBoundary.copy.idPrefix")} ${error.digest}`
+        : ""
+    }${
+      error.stack
+        ? `\n\n${t("errors.pages.errorBoundary.copy.stackPrefix")}\n${error.stack}`
+        : ""
+    }`;
 
     void navigator.clipboard.writeText(errorText);
     setCopied(true);
@@ -78,7 +88,7 @@ export default function ErrorBoundary({
   // Custom animated arrow icon
   const AnimatedArrowLeft = () => (
     <svg
-      className="-ml-1 mr-1.5 stroke-[1.5px]"
+      className="-ms-1 me-1.5 stroke-[1.5px]"
       fill="none"
       stroke="currentColor"
       width="11"
@@ -102,8 +112,8 @@ export default function ErrorBoundary({
       {/* Desktop layout */}
       <div className="w-full pt-108 max-w-[400px] mx-auto relative flex-col h-full hidden lg:flex">
         {/* Full height vertical borders that frame the content - positioned to align with connectors */}
-        <div className="absolute left-0 top-0 bottom-0 w-1 bg-border-faint" />
-        <div className="absolute right-0 top-0 bottom-0 w-1 bg-border-faint" />
+        <div className="absolute start-0 top-0 bottom-0 w-1 bg-border-faint" />
+        <div className="absolute end-0 top-0 bottom-0 w-1 bg-border-faint" />
 
         {/* Logo section - Fixed position from top */}
         {logoSection}
@@ -113,7 +123,7 @@ export default function ErrorBoundary({
           <div className="px-16 py-32 text-center">
             <p className="font-mono text-body-large text-primary">
               <ScrambleText
-                text="Something went wrong..."
+                text={t("errors.pages.errorBoundary.title")}
                 delay={0.2}
                 duration={1.5}
                 isInView={isInView}
@@ -134,13 +144,13 @@ export default function ErrorBoundary({
               onClick={() => router.push("/")}
             >
               <AnimatedArrowLeft />
-              <span>Go Home</span>
+              <span>{t("errors.pages.errorBoundary.goHome")}</span>
             </button>
             <button
               className="inline-flex items-center justify-center rounded-full font-medium transition-all duration-200 h-40 px-20 text-label-medium gap-8 bg-heat-100 text-white hover:bg-heat-200 active:scale-[0.98] shadow-[0_1px_2px_rgba(0,0,0,0.05)] hover:shadow-[0_4px_12px_rgba(250,93,25,0.25)] flex-1"
               onClick={reset}
             >
-              Try Again
+              {t("errors.pages.errorBoundary.tryAgain")}
             </button>
           </div>
 
@@ -155,12 +165,14 @@ export default function ErrorBoundary({
           <div className="flex-1 overflow-y-auto px-16 py-24 font-mono text-body-small text-black-alpha-80 space-y-16">
             {/* Error message */}
             <div className="break-all">
-              {error.message || "An unexpected error occurred"}
+              {error.message || t("errors.pages.errorBoundary.unexpected")}
             </div>
 
             {/* Error ID if available */}
             {error.digest && (
-              <div className="text-black-alpha-60">ID: {error.digest}</div>
+              <div className="text-black-alpha-60">
+                {t("errors.pages.errorBoundary.copy.idPrefix")} {error.digest}
+              </div>
             )}
 
             {/* Stack trace in dev mode */}
@@ -195,7 +207,11 @@ export default function ErrorBoundary({
                       <div className="w-16 h-16">
                         {copied ? <CopiedIcon /> : <CopyIcon />}
                       </div>
-                      <span>{copied ? "Copied!" : "Copy Error"}</span>
+                      <span>
+                        {copied
+                          ? t("errors.pages.errorBoundary.copy.copied")
+                          : t("errors.pages.errorBoundary.copy.copyError")}
+                      </span>
                     </motion.div>
                   </AnimatePresence>
                 </AnimatedWidth>
@@ -213,8 +229,8 @@ export default function ErrorBoundary({
       {/* Mobile layout - optimized for proper alignment */}
       <div className="w-full max-w-[400px] mx-auto relative flex flex-col h-full lg:hidden">
         {/* Full height vertical borders that frame the content */}
-        <div className="absolute left-0 top-0 h-full w-1 bg-border-faint" />
-        <div className="absolute right-0 top-0 h-full w-1 bg-border-faint" />
+        <div className="absolute start-0 top-0 h-full w-1 bg-border-faint" />
+        <div className="absolute end-0 top-0 h-full w-1 bg-border-faint" />
 
         {/* Logo section - Fixed at top */}
         <div className="flex-shrink-0">{logoSection}</div>
@@ -224,7 +240,7 @@ export default function ErrorBoundary({
           <div className="px-16 py-32 text-center">
             <p className="font-mono text-body-large text-primary">
               <ScrambleText
-                text="Something went wrong..."
+                text={t("errors.pages.errorBoundary.title")}
                 delay={0.2}
                 duration={1.5}
                 isInView={isInView}
@@ -232,7 +248,7 @@ export default function ErrorBoundary({
             </p>
           </div>
           {/* Full width bottom border */}
-          <div className="absolute bottom-0 w-screen left-[calc(50%-50vw)] h-1 bg-border-faint" />
+          <div className="absolute bottom-0 w-screen start-[calc(50%-50vw)] h-1 bg-border-faint" />
           <Connector className="absolute -bottom-[10px] -left-[10.5px]" />
           <Connector className="absolute -bottom-[10px] -right-[10.5px]" />
         </div>
@@ -245,18 +261,18 @@ export default function ErrorBoundary({
               onClick={() => router.push("/")}
             >
               <AnimatedArrowLeft />
-              <span>Go Home</span>
+              <span>{t("errors.pages.errorBoundary.goHome")}</span>
             </button>
             <button
               className="inline-flex items-center justify-center rounded-full font-medium transition-all duration-200 h-40 px-20 text-label-medium gap-8 bg-heat-100 text-white hover:bg-heat-200 active:scale-[0.98] shadow-[0_1px_2px_rgba(0,0,0,0.05)] hover:shadow-[0_4px_12px_rgba(250,93,25,0.25)] flex-1"
               onClick={reset}
             >
-              Try Again
+              {t("errors.pages.errorBoundary.tryAgain")}
             </button>
           </div>
 
           {/* Full width bottom border */}
-          <div className="absolute bottom-0 w-screen left-[calc(50%-50vw)] h-1 bg-border-faint" />
+          <div className="absolute bottom-0 w-screen start-[calc(50%-50vw)] h-1 bg-border-faint" />
           <Connector className="absolute -bottom-[10px] -left-[10.5px]" />
           <Connector className="absolute -bottom-[10px] -right-[10.5px]" />
         </div>
@@ -266,12 +282,14 @@ export default function ErrorBoundary({
           <div className="flex-1 overflow-y-auto px-16 py-24 font-mono text-body-small text-black-alpha-80 space-y-16">
             {/* Error message */}
             <div className="break-all">
-              {error.message || "An unexpected error occurred"}
+              {error.message || t("errors.pages.errorBoundary.unexpected")}
             </div>
 
             {/* Error ID if available */}
             {error.digest && (
-              <div className="text-black-alpha-60">ID: {error.digest}</div>
+              <div className="text-black-alpha-60">
+                {t("errors.pages.errorBoundary.copy.idPrefix")} {error.digest}
+              </div>
             )}
 
             {/* Stack trace in dev mode */}
@@ -286,7 +304,7 @@ export default function ErrorBoundary({
         {/* Copy button section - Fixed at bottom */}
         <div className="relative flex-shrink-0">
           {/* Full width top border */}
-          <div className="absolute top-0 w-screen left-[calc(50%-50vw)] h-1 bg-border-faint" />
+          <div className="absolute top-0 w-screen start-[calc(50%-50vw)] h-1 bg-border-faint" />
           <Connector className="absolute -top-[10px] -left-[10.5px]" />
           <Connector className="absolute -top-[10px] -right-[10.5px]" />
 
@@ -307,7 +325,11 @@ export default function ErrorBoundary({
                     <div className="w-16 h-16">
                       {copied ? <CopiedIcon /> : <CopyIcon />}
                     </div>
-                    <span>{copied ? "Copied!" : "Copy Error"}</span>
+                    <span>
+                      {copied
+                        ? t("errors.pages.errorBoundary.copy.copied")
+                        : t("errors.pages.errorBoundary.copy.copyError")}
+                    </span>
                   </motion.div>
                 </AnimatePresence>
               </AnimatedWidth>
@@ -315,7 +337,7 @@ export default function ErrorBoundary({
           </div>
 
           {/* Full width bottom border */}
-          <div className="absolute bottom-0 w-screen left-[calc(50%-50vw)] h-1 bg-border-faint" />
+          <div className="absolute bottom-0 w-screen start-[calc(50%-50vw)] h-1 bg-border-faint" />
           <Connector className="absolute -bottom-[10px] -left-[10.5px]" />
           <Connector className="absolute -bottom-[10px] -right-[10.5px]" />
         </div>

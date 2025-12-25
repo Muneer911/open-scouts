@@ -3,6 +3,7 @@
 import CurvyRect from "@/components/shared/layout/curvy-rect";
 import SectionHead from "@/components/shared/section-head/SectionHead";
 import { Connector } from "@/components/shared/layout/curvy-rect";
+import { useI18n } from "@/contexts/I18nContext";
 
 import ScoutChats from "./ScoutChats/ScoutChats";
 import AiFlame from "../ai/Flame/Flame";
@@ -89,7 +90,7 @@ function ScoutCard({
     <div className="relative lg:flex lg:h-400" id={id}>
       <div className="p-32 lg:px-64 lg:py-60 z-[2] lg:w-454 relative flex flex-col h-full">
         <CurvyRect
-          className="absolute -top-1 h-[calc(100%+1px)] left-0 w-full"
+          className="absolute -top-1 h-[calc(100%+1px)] start-0 w-full"
           allSides
         />
 
@@ -105,9 +106,9 @@ function ScoutCard({
         <div className="flex-1 mb-24" />
       </div>
 
-      <div className="flex-1 -mt-1 lg:-ml-1 relative">
-        <div className="absolute lg-max:w-full lg-max:h-1 left-0 h-full w-1 bg-border-faint top-0" />
-        <CurvyRect className="absolute top-0 h-full left-0 w-full" allSides />
+      <div className="flex-1 -mt-1 lg:-ms-1 relative">
+        <div className="absolute lg-max:w-full lg-max:h-1 start-0 h-full w-1 bg-border-faint top-0" />
+        <CurvyRect className="absolute top-0 h-full start-0 w-full" allSides />
 
         {children}
       </div>
@@ -131,20 +132,22 @@ const card = {
 };
 
 export default function HowItWorks() {
+  const { t } = useI18n();
+
   return (
     <>
       {/* Section Title */}
       <div className="-mt-1 pointer-events-none select-none relative container">
-        <Connector className="absolute right-[-10.5px] -top-10" />
-        <Connector className="absolute left-[-10.5px] -top-10" />
-        <Connector className="absolute right-[-10.5px] -bottom-10" />
-        <Connector className="absolute left-[-10.5px] -bottom-10" />
+        <Connector className="absolute end-[-10.5px] -top-10" />
+        <Connector className="absolute start-[-10.5px] -top-10" />
+        <Connector className="absolute end-[-10.5px] -bottom-10" />
+        <Connector className="absolute start-[-10.5px] -bottom-10" />
 
         <div className="relative grid lg:grid-cols-2 -mt-1">
-          <div className="h-1 bottom-0 absolute w-screen left-[calc(50%-50vw)] bg-border-faint" />
+          <div className="h-1 bottom-0 absolute w-screen start-[calc(50%-50vw)] bg-border-faint" />
 
           <div className="flex gap-40 py-24 lg:py-45 relative">
-            <div className="h-full w-1 right-0 top-0 bg-border-faint absolute lg-max:hidden" />
+            <div className="h-full w-1 end-0 top-0 bg-border-faint absolute lg-max:hidden" />
             <div className="w-2 h-16 bg-heat-100" />
 
             <div className="flex gap-12 items-center !text-mono-x-small text-black-alpha-16 font-mono">
@@ -154,7 +157,9 @@ export default function HowItWorks() {
 
               <div className="w-8 text-center">·</div>
 
-              <div className="uppercase text-black-alpha-32">How It Works</div>
+              <div className="uppercase text-black-alpha-32">
+                {t("common.homeSections.howItWorks.kicker")}
+              </div>
             </div>
           </div>
         </div>
@@ -165,16 +170,19 @@ export default function HowItWorks() {
           badgeContent={
             <>
               <BadgeIcon />
-              <span>How it works</span>
+              <span>{t("common.homeSections.howItWorks.badge")}</span>
             </>
           }
           className="lg-max:!py-64"
-          description="Create powerful AI scouts that work around the clock to find exactly what you're looking for."
+          description={t("common.homeSections.howItWorks.description")}
           descriptionClassName="lg-max:px-24"
           title={
             <>
-              From idea to <br className="lg:hidden" />
-              <span className="text-heat-100">discovery</span> in minutes
+              {t("common.homeSections.howItWorks.titlePrefix")} <br className="lg:hidden" />
+              <span className="text-heat-100">
+                {t("common.homeSections.howItWorks.titleAccent")}
+              </span>{" "}
+              {t("common.homeSections.howItWorks.titleSuffix")}
             </>
           }
           titleClassName="max-w-650"
@@ -182,7 +190,21 @@ export default function HowItWorks() {
           <AiFlame />
         </SectionHead>
 
-        <ScoutCard {...card}>{card.children}</ScoutCard>
+        <ScoutCard
+          title={t("common.homeSections.howItWorks.card.title")}
+          subtitle={t("common.homeSections.howItWorks.card.subtitle")}
+          description={
+            <>
+              {t("common.homeSections.howItWorks.card.line1")}
+              <br />
+              {t("common.homeSections.howItWorks.card.line2")}
+            </>
+          }
+          icon={<ChatIcon />}
+          id="scout-chats"
+        >
+          <ScoutChats />
+        </ScoutCard>
       </section>
     </>
   );

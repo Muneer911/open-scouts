@@ -10,6 +10,7 @@ import FirecrawlIcon from "@/components/shared/firecrawl-icon/firecrawl-icon";
 import Logo from "@/components/shared/header/_svg/Logo";
 import { useHeaderContext } from "@/components/shared/header/HeaderContext";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/contexts/I18nContext";
 
 import Download from "./_svg/Download";
 import Guidelines from "./_svg/Guidelines";
@@ -58,6 +59,7 @@ export default function HeaderBrandKit() {
 }
 
 const Menu = ({ setOpen }: { setOpen: (open: boolean) => void }) => {
+  const { t } = useI18n();
   const backgroundRef = useRef<HTMLDivElement>(null);
 
   const timeoutRef = useRef<number | null>(null);
@@ -109,7 +111,7 @@ const Menu = ({ setOpen }: { setOpen: (open: boolean) => void }) => {
   return (
     <motion.div
       animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-      className="absolute w-220 whitespace-nowrap rounded-16 p-4 bg-white left-0 top-[calc(100%+8px)] z-[2000] border border-border-faint"
+      className="absolute w-220 whitespace-nowrap rounded-16 p-4 bg-white start-0 top-[calc(100%+8px)] z-[2000] border border-border-faint"
       exit={{ opacity: 0, y: 8, scale: 0.98, filter: "blur(1px)" }}
       initial={{ opacity: 0, y: -6, filter: "blur(1px)" }}
       style={{
@@ -135,7 +137,7 @@ const Menu = ({ setOpen }: { setOpen: (open: boolean) => void }) => {
         onMouseLeave={onMouseLeave}
       >
         <ArrowUpRight className="w-18 h-18" />
-        Open in new tab
+        {t("common.header.brandKit.openInNewTab")}
       </Button>
 
       <div className="px-8 py-4">
@@ -157,7 +159,7 @@ const Menu = ({ setOpen }: { setOpen: (open: boolean) => void }) => {
         onMouseLeave={onMouseLeave}
       >
         <Icon />
-        Copy logo as SVG
+        {t("common.header.brandKit.copyLogoAsSvg")}
       </Button>
 
       <Button
@@ -173,7 +175,7 @@ const Menu = ({ setOpen }: { setOpen: (open: boolean) => void }) => {
         onMouseLeave={onMouseLeave}
       >
         <Download />
-        Download brand assets
+        {t("common.header.brandKit.downloadBrandAssets")}
       </Button>
 
       <div className="px-8 py-4">
@@ -193,7 +195,7 @@ const Menu = ({ setOpen }: { setOpen: (open: boolean) => void }) => {
         onMouseLeave={onMouseLeave}
       >
         <Guidelines />
-        Visit brand guidelines
+        {t("common.header.brandKit.visitBrandGuidelines")}
       </Button>
     </motion.div>
   );

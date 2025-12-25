@@ -11,11 +11,13 @@ export function ScoutInput({
   onChange,
   onSubmit,
   value: externalValue,
+  submitLabel,
 }: {
   placeholders: string[];
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   value?: string;
+  submitLabel?: string;
 }) {
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
 
@@ -216,7 +218,7 @@ export function ScoutInput({
           <div className="relative flex-1">
             <canvas
               className={cn(
-                "absolute pointer-events-none text-base transform scale-50 top-0 left-0 origin-top-left filter invert pr-20",
+                "absolute pointer-events-none text-base transform scale-50 top-0 start-0 origin-top-left filter invert pe-20",
                 !animating ? "opacity-0" : "opacity-100",
               )}
               ref={canvasRef}
@@ -254,7 +256,7 @@ export function ScoutInput({
                 !value && "opacity-50",
               )}
             >
-              {value ? "Create Scout" : "→"}
+              {value ? submitLabel || "Create Scout" : "→"}
             </div>
           </Button>
         </label>
